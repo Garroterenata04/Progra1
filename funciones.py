@@ -1,61 +1,78 @@
-# función para agregar un estudiante a la matriz
+# AGREGA un estudiante
 def agregar_estudiante(estudiantes):
 
-    nombre = input("Ingrese el nombre: ")
-    nota = float(input("Ingrese la nota: "))
+    nombre = input("Ingrese el nombre: ").strip()
 
-    # se agrega una nueva fila a la matriz
+    # validación con try/except
+    try:
+        nota = float(input("Ingrese la nota: "))
+    except:
+        print("Error: la nota debe ser un número\n")
+        return
+
+    # se guarda como [nombre, nota]
     estudiantes.append([nombre, nota])
 
     print("Estudiante agregado\n")
 
 
-# función para mostrar todos los estudiantes
+# MUESTRA todos los estudiantes
 def mostrar_estudiantes(estudiantes):
 
-    # si la matriz está vacía
     if len(estudiantes) == 0:
         print("No hay estudiantes\n")
         return
 
     # recorre la matriz
     for i in range(len(estudiantes)):
-
-        # estudiantes[i][0] → nombre
-        # estudiantes[i][1] → nota
         print(i, "-", estudiantes[i][0], "-", estudiantes[i][1])
 
     print()
 
 
-# función para modificar datos de un estudiante
+# MODIFICA datos
 def modificar_estudiante(estudiantes):
 
     if len(estudiantes) == 0:
         print("No hay estudiantes\n")
         return
 
-    # muestra la lista para elegir
     mostrar_estudiantes(estudiantes)
 
-    pos = int(input("Ingrese el índice del estudiante: "))
+    try:
+        pos = int(input("Ingrese el índice del estudiante: "))
 
-    opcion = input("Modificar (n)ombre o (t)nota: ")
+        # validación de rango
+        if pos < 0 or pos >= len(estudiantes):
+            print("Índice inválido\n")
+            return
 
-    # modificar nombre
+    except:
+        print("Error: debe ingresar un número\n")
+        return
+
+    opcion = input("Modificar (n)ombre o (t)nota: ").lower()
+
+    # cambiar nombre
     if opcion == "n":
-        nuevo = input("Nuevo nombre: ")
-        estudiantes[pos][0] = nuevo
+        estudiantes[pos][0] = input("Nuevo nombre: ")
 
-    # modificar nota
+    # cambiar nota
     elif opcion == "t":
-        nueva = float(input("Nueva nota: "))
-        estudiantes[pos][1] = nueva
+        try:
+            estudiantes[pos][1] = float(input("Nueva nota: "))
+        except:
+            print("Error: la nota debe ser un número\n")
+            return
+
+    else:
+        print("Opción inválida\n")
+        return
 
     print("Datos modificados\n")
 
 
-# función para eliminar un estudiante
+# ELIMINA un estudiante
 def eliminar_estudiante(estudiantes):
 
     if len(estudiantes) == 0:
@@ -64,9 +81,17 @@ def eliminar_estudiante(estudiantes):
 
     mostrar_estudiantes(estudiantes)
 
-    pos = int(input("Ingrese el índice a eliminar: "))
+    try:
+        pos = int(input("Ingrese el índice a eliminar: "))
 
-    # elimina la fila de la matriz
-    estudiantes.pop(pos)
+        if pos < 0 or pos >= len(estudiantes):
+            print("Índice inválido\n")
+            return
+
+    except:
+        print("Error: debe ingresar un número\n")
+        return
+
+    estudiantes.pop(pos)  # elimina la fila
 
     print("Estudiante eliminado\n")

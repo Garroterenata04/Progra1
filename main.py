@@ -1,46 +1,65 @@
-# importa todas las funciones del archivo funciones.py
+# importa funciones del CRUD
 from funciones import *
 
-# función principal del programa
+# importa funciones de matrices (estadísticas)
+from matrices import *
+
+
 def main():
 
-    estudiantes = []  
-    # matriz vacía donde se guardarán los estudiantes
-    # cada fila será: [nombre, nota]
-
+    estudiantes = []  # lista de listas → [nombre, nota]
     opcion = ""
 
-    # bucle del menú, se repite hasta que el usuario elija salir
-    while opcion != "5":
+    # menú principal
+    while opcion != "6":
 
-        print("Sistema de Evaluación Académica")
+        print("=== Sistema de Evaluación Académica ===")
         print("1 - Agregar estudiante")
         print("2 - Mostrar estudiantes")
         print("3 - Modificar estudiante")
         print("4 - Eliminar estudiante")
-        print("5 - Salir")
+        print("5 - Ver estadísticas")
+        print("6 - Salir")
 
-        # el usuario elige una opción
-        opcion = input("Seleccione una opción: ")
+        opcion = input("Seleccione una opción: ").strip()
 
-        # según la opción se llama a una función distinta
+        # CREATE
         if opcion == "1":
             agregar_estudiante(estudiantes)
 
+        # READ
         elif opcion == "2":
             mostrar_estudiantes(estudiantes)
 
+        # UPDATE
         elif opcion == "3":
             modificar_estudiante(estudiantes)
 
+        # DELETE
         elif opcion == "4":
             eliminar_estudiante(estudiantes)
 
+        # ESTADÍSTICAS (uso de matrices)
         elif opcion == "5":
+
+            if len(estudiantes) == 0:
+                print("No hay datos\n")
+            else:
+                prom = calcular_promedio(estudiantes)
+                mejor = mejor_estudiante(estudiantes)
+                peor = peor_estudiante(estudiantes)
+
+                print("Promedio:", prom)
+                print("Mejor:", mejor[0], "-", mejor[1])
+                print("Peor:", peor[0], "-", peor[1])
+                print()
+
+        elif opcion == "6":
             print("Programa finalizado")
 
         else:
-            print("Opción inválida")
+            print("Opción inválida\n")
 
-# ejecuta la función principal
+
+# ejecuta el programa
 main()
