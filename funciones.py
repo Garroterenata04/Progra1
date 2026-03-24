@@ -53,17 +53,17 @@ def modificar_estudiante(estudiantes):
     print("Datos modificados\n")
 
 
-# función para eliminar estudiante
+# baja estudiante
 def eliminar_estudiante(estudiantes):
-
     if len(estudiantes) == 0:
         print("No hay estudiantes\n")
         return
-
     mostrar_estudiantes(estudiantes)
 
-    pos = int(input("Ingrese el índice a eliminar: ")) #posicion en la tabla 
+    pos=int(input("ingrese el indice a eliminar: "))
 
-    estudiantes.pop(pos)
-
-    print("Estudiante eliminado\n")
+    if 0<= pos <len(estudiantes):
+        eliminado=estudiantes.pop(pos) #elimina el legajo en esa posicion y lo guarda en la variable
+        print("estudiante eliminado correctamente: ", eliminado[1], "\n")
+    else:
+        print("indice ingresado incorrecto. ")
