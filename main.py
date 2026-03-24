@@ -17,7 +17,7 @@ def main():
         print("1 - Agregar estudiante")
         print("2 - Mostrar estudiantes")
         print("3 - Modificar estudiante")
-        print("4 - Eliminar estudiante")
+        print("4 - Eliminar estudiante") #baja logica true/false
         print("5 - Ver promedio")
         print("6 - Mejor estudiante")
         print("7 - Salir")
