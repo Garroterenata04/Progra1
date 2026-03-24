@@ -1,6 +1,6 @@
 # importa todas las funciones del archivo funciones.py
 from funciones import *
-
+from matrices import *
 # función principal del programa
 def main():
 
@@ -18,7 +18,9 @@ def main():
         print("2 - Mostrar estudiantes")
         print("3 - Modificar estudiante")
         print("4 - Eliminar estudiante")
-        print("5 - Salir")
+        print("5 - Ver promedio")
+        print("6 - Mejor estudiante")
+        print("7 - Salir")
 
         # pedir opción al usuario
         opcion = input("Seleccione una opción: ")
@@ -37,9 +39,16 @@ def main():
 
         elif opcion == "5":
             print("Programa finalizado")
+        #elif opcion == "6":
+            #prom = calcular_promedio(estudiantes)
+            #print("Promedio:", prom, "\n")
 
-        else:
-            print("Opción inválida\n")
+        #elif opcion == "7":
+            #mejor = mejor_estudiante(estudiantes)
+            #if mejor:
+                #print("Mejor estudiante:", mejor[0], "-", mejor[1], "-", mejor[2], "\n")
+        #else:
+            #print("Opción inválida\n")
 
 
 # ejecuta el programa
