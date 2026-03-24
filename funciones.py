@@ -1,12 +1,18 @@
 # función para agregar un estudiante
 def agregar_estudiante(estudiantes):
-    nombre = input("Ingrese el nombre: ")
-    nota = int(input("Ingrese el la nota: "))
 
-    # se agrega como [nombre, legajo]
-    estudiantes.append([nombre, nota])
+    estudianteNuevo = []
+    
+    legajo = estudiantes[-1][0] + 1
+    nombre = input('Ingrese el nombre y apellido: \n')
+    email = input('Ingrese el mail: \n')
 
-    print("Estudiante agregado\n")
+    estudianteNuevo.append(legajo)
+    estudianteNuevo.append(nombre)
+    estudianteNuevo.append(email)
+    
+    return(estudianteNuevo)
+
 
 
 # función para mostrar estudiantes
