@@ -1,11 +1,18 @@
 # función para agregar un estudiante
 def agregar_estudiante(estudiantes):
-    nombre = input("Ingrese el nombre: ")
 
-    # se agrega como [nombre, legajo]
-    estudiantes.append([nombre])
+    estudianteNuevo = []
+    
+    legajo = estudiantes[-1][0] + 1
+    nombre = input('Ingrese el nombre y apellido: \n')
+    email = input('Ingrese el mail: \n')
 
-    print("Estudiante agregado\n")
+    estudianteNuevo.append(legajo)
+    estudianteNuevo.append(nombre)
+    estudianteNuevo.append(email)
+    
+    return(estudianteNuevo)
+
 
 
 # función para mostrar estudiantes
@@ -17,7 +24,7 @@ def mostrar_estudiantes(estudiantes):
 
     # recorre la lista
     for i in range(len(estudiantes)):
-        print(i, estudiantes[i][0])
+        print(i, estudiantes[i][0], estudiantes[i][1])
 
     print()
 
@@ -33,7 +40,7 @@ def modificar_estudiante(estudiantes):
 
     pos= int(input("Ingrese el índice: ")) #posicion en la tabla 
 
-    opcion = input("Modificar (n)ombre: ")
+    opcion = input("Modificar (n)ombre o (t)nota: ")
 
     if opcion == "n":
         nuevo = input("Nuevo nombre: ")
@@ -46,18 +53,17 @@ def modificar_estudiante(estudiantes):
     print("Datos modificados\n")
 
 
-# Baja de alumno
-def eliminar_estudiante(estudiante):
-    if len (estudiante) == 0:
-        print("no hay estudiantes \n")
-        return
-    mostrar_estudiantes(estudiante)
-    pos=int(input("ingrese el legajo a eliminar: ")) #posicion 
+# función para eliminar estudiante
+def eliminar_estudiante(estudiantes):
 
-    if 0 <= pos <len(estudiante):
-        eliminado = estudiante.pop(pos) #elimina el elemento en la posicion que elige el usuario.
-        print("El estudiante fue eliminado con exito: ", eliminado[0], "\n") #en baja logica CREO que seria asi
-    else:
-        print("indice ingresado invalido. \n")                              #if len(estudiante[pos]) == 1:
-                                                                            #estudiante[pos].append(False)
-                                                                            #(else)estudiante[pos][1] = False
+    if len(estudiantes) == 0:
+        print("No hay estudiantes\n")
+        return
+
+    mostrar_estudiantes(estudiantes)
+
+    pos = int(input("Ingrese el índice a eliminar: ")) #posicion en la tabla 
+
+    estudiantes.pop(pos)
+
+    print("Estudiante eliminado\n")
