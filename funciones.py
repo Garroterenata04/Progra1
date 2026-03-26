@@ -1,8 +1,16 @@
+#----------------------------RECURSOS----------------------------
+from os import system
+
+
+# ----------------------------FUNCIONES ESTUDIANTES----------------------------
+
 # función para agregar un estudiante
 def agregar_estudiante(estudiantes):
 
     estudianteNuevo = []
     
+    print(estudiantes[0][0])
+    input()
     legajo = estudiantes[-1][0] + 1
     nombre = input('Ingrese el nombre y apellido: \n')
     email = input('Ingrese el mail: \n')
@@ -67,3 +75,72 @@ def eliminar_estudiante(estudiantes):
         print("estudiante eliminado correctamente: ", eliminado[1], "\n")
     else:
         print("indice ingresado incorrecto. ")
+
+
+#----------------------------FUNCIONES MENU----------------------------
+
+def menu_estudiantes(estudiantes):
+    
+    estudiantenuevo = []
+
+    seleccion = " "
+
+    #Ciclo para el menu
+    while seleccion != '0':
+
+        system('clear')        
+
+        #Opciones
+        print("1. Alta de estudiante")
+        print("2. Modificacion de estudiante")
+        print("3. Baja de estudiante")
+        print("4. Lista de estudiantes")
+        print("0. Volver")
+
+        seleccion = input ('Opcion: ')
+
+
+        #Asigno funcion en base a la opcion ingresada y capturo el error en un numero no esperado
+        if seleccion == '1':
+            
+            system('clear')
+
+            estudiantenuevo = agregar_estudiante(estudiantes)
+
+            input()
+        elif seleccion == '2':
+
+            system('clear')
+
+            print('Funcion de modificar')
+            #modificar_estudiante()
+            input()
+        elif seleccion == '3':
+
+            system('clear')
+            
+            print('Funcion baja')
+            #mostrar_estudiantes()
+            input()
+        elif seleccion == '4':
+
+            system('clear')
+
+            print('2. Funcion listar')  
+            #Listar_estudiantes()        
+            input()
+
+        elif seleccion == '0':
+
+            print('volviendo al menu anterior...')         
+            input()
+        
+        else:
+            system('clear')
+            print('Opcion invalida')
+            input()
+
+        return(estudiantenuevo)
+
+    return()
+
