@@ -68,9 +68,8 @@ def main():
 
         if opcion == '1':
 
-            estudiantenuevo = menu_estudiantes(estudiantes)
-            print(estudiantenuevo)
-            input()
+            menu_estudiantes(estudiantes)
+
 
         elif opcion == '2':
 
@@ -86,7 +85,7 @@ def main():
 
         elif opcion == '4':
 
-            print('opcion 3')
+            print('opcion 4')
             input()
             #menu_estadisticas()
         
