@@ -8,9 +8,7 @@ from os import system
 def agregar_estudiante(estudiantes):
 
     estudianteNuevo = []
-    
-    print(estudiantes[0][0])
-    input()
+
     legajo = estudiantes[-1][0] + 1
     nombre = input('Ingrese el nombre y apellido: \n')
     email = input('Ingrese el mail: \n')
@@ -104,10 +102,8 @@ def menu_estudiantes(estudiantes):
         if seleccion == '1':
             
             system('clear')
+            estudiantes.append(agregar_estudiante(estudiantes))
 
-            estudiantenuevo = agregar_estudiante(estudiantes)
-
-            input()
         elif seleccion == '2':
 
             system('clear')
@@ -126,7 +122,8 @@ def menu_estudiantes(estudiantes):
 
             system('clear')
 
-            print('2. Funcion listar')  
+            print('2. Funcion listar')
+            print(estudiantes)
             #Listar_estudiantes()        
             input()
 
@@ -139,8 +136,6 @@ def menu_estudiantes(estudiantes):
             system('clear')
             print('Opcion invalida')
             input()
-
-        return(estudiantenuevo)
 
     return()
 
