@@ -6,12 +6,11 @@ from os import system
 # función principal del programa
 def main():
 
-    estudiantes = [[1, 'Juan Netto', 'jnetto@uade.edu.ar'], [2, 'Fulano', 'fulano@uade.edu.ar']]
+    estudiantes = [[1, 'juan Netto', 'jnetto@uade.edu.ar', True], [2, 'fulano', 'fulano@uade.edu.ar', True]]
+    materias = [[1, 'matematicas', True]]
     # lista donde se guardan los estudiantes
     # cada elemento será: [legajo, nombre, email]
 
-    estudiantenuevo = []
-    #lista temporal para guardar alumno nuevo
 
     opcion = ""
 
@@ -73,9 +72,7 @@ def main():
 
         elif opcion == '2':
 
-            print('Opcion 2')
-            input()
-            #menu_materias()
+            menu_materias(materias)
 
         elif opcion == '3':
 
