@@ -71,14 +71,12 @@ def eliminar_estudiante(estudiantes):
         return
     mostrar_estudiantes(estudiantes)
 
-    pos=int(input("ingrese el indice a eliminar: "))
+    pos=input("ingrese el legajo a eliminar: ")
 
-    if 0<= pos <len(estudiantes):
-        eliminado=estudiantes.pop(pos) #elimina el legajo en esa posicion y lo guarda en la variable
-        print("estudiante eliminado correctamente: ", eliminado[1], "\n")
-    else:
-        print("indice ingresado incorrecto. ")
-
+    for i in range (estudiantes):
+        if estudiantes [i][0] == pos:
+            estudiantes [i][3] = False
+            print("El estudiante fue eliminado correctamente: ", estudiantes [i][1])
 
 #----------------------------FUNCIONES MATERIAS----------------------------
 
@@ -136,12 +134,9 @@ def menu_estudiantes(estudiantes):
             #modificar_estudiante()
             input()
         elif seleccion == '3':
-
-            system('clear')
+            eliminar_estudiante (estudiantes)
+        
             
-            print('Funcion baja')
-            #mostrar_estudiantes()
-            input()
         elif seleccion == '4':
 
             system('clear')
