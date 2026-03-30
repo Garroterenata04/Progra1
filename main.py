@@ -55,7 +55,7 @@ def main():
             #print("Opción inválida\n")'''
         
 
-        system('clear')
+        limpiar_pantalla()
 
         print("1 - Menu estudiantes")
         print("2 - Menu materias")

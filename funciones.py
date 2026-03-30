@@ -1,5 +1,11 @@
 #----------------------------RECURSOS----------------------------
-from os import system
+import os
+
+def limpiar_pantalla():
+    if os.name == 'nt':
+        os.system('cls')      # Windows
+    else:
+        os.system('clear')    # Mac / Linux
 
 
 # ----------------------------FUNCIONES ESTUDIANTES----------------------------
@@ -110,7 +116,7 @@ def menu_estudiantes(estudiantes):
     #Ciclo para el menu
     while seleccion != '0':
 
-        system('clear')        
+        limpiar_pantalla()        
 
         #Opciones
         print("1. Alta de estudiante")
@@ -125,12 +131,12 @@ def menu_estudiantes(estudiantes):
         #Asigno funcion en base a la opcion ingresada y capturo el error en un numero no esperado
         if seleccion == '1':
             
-            system('clear')
+            limpiar_pantalla()
             estudiantes.append(agregar_estudiante(estudiantes))
 
         elif seleccion == '2':
 
-            system('clear')
+            limpiar_pantalla()
 
             print('Funcion de modificar')
             #modificar_estudiante()
@@ -142,7 +148,7 @@ def menu_estudiantes(estudiantes):
             
         elif seleccion == '4':
 
-            system('clear')
+            limpiar_pantalla()
 
             print('2. Funcion listar')
             print(estudiantes)
@@ -155,7 +161,7 @@ def menu_estudiantes(estudiantes):
             input()
         
         else:
-            system('clear')
+            limpiar_pantalla()
             print('Opcion invalida')
             input()
 
@@ -168,7 +174,7 @@ def menu_materias (materias):
     #ciclo para el menu de materias
     while seleccion != '0':
 
-        system('clear')
+        limpiar_pantalla()
 
         print("1. Alta de materias")
         print("2. Modificacion de materias")
@@ -181,7 +187,7 @@ def menu_materias (materias):
         #Asigno funcion en base a la opcion ingresada y capturo el error en un numero no esperado
         if seleccion == '1':
 
-            system('clear')
+            limpiar_pantalla()
 
             materias.append(agregar_materia(materias))
         
@@ -193,7 +199,7 @@ def menu_materias (materias):
 
         elif seleccion == '4':
 
-            system('clear')
+            limpiar_pantalla()
 
             print('2. Funcion listar')
             print(materias)
