@@ -46,28 +46,59 @@ def mostrar_estudiantes(estudiantes):
     print()
 
 
+
 # función para modificar estudiante
+
+
+
 def modificar_estudiante(estudiantes):
 
     if len(estudiantes) == 0:
         print("No hay estudiantes\n")
+        input()
         return
 
     mostrar_estudiantes(estudiantes)
 
-    pos= int(input("Ingrese el índice: ")) #posicion en la tabla 
+    pos = int(input("Ingrese el índice del estudiante a modificar: "))
 
-    opcion = input("Modificar (n)ombre o (t)nota: ")
+    if pos < 0 or pos >= len(estudiantes):
+        print("Índice inválido\n")
+        input()
+        return
 
-    if opcion == "n":
-        nuevo = input("Nuevo nombre: ")
-        estudiantes[pos][0] = nuevo
+    print("\n¿Qué desea modificar?")
+    print("1 - Nombre")
+    print("2 - Email")
+    print("3 - Ambos")
 
-    elif opcion == "t":
-        nueva = float(input("Nueva nota: "))
-        estudiantes[pos][1] = nueva
+    opcion = input("Seleccione una opción: ")
 
-    print("Datos modificados\n")
+    if opcion == "1":
+        nuevo_nombre = input("Nuevo nombre: ")
+        estudiantes[pos][1] = nuevo_nombre
+
+    elif opcion == "2":
+        nuevo_email = input("Nuevo email: ")
+        estudiantes[pos][2] = nuevo_email
+
+    elif opcion == "3":
+        nuevo_nombre = input("Nuevo nombre: ")
+        nuevo_email = input("Nuevo email: ")
+        estudiantes[pos][1] = nuevo_nombre
+        estudiantes[pos][2] = nuevo_email
+
+    else:
+        print("Opción inválida")
+        input()
+        return
+
+    print("\nDatos modificados correctamente")
+    input()
+
+
+
+
 
 
 # baja estudiante

@@ -29,7 +29,7 @@ def main():
         # pedir opción al usuario
         opcion = input("Seleccione una opción: ")
 
-        if opcion == "1":
+        if opcion == "1":   
             agregar_estudiante(estudiantes)
 
         elif opcion == "2":
