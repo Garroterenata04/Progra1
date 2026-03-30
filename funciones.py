@@ -66,17 +66,19 @@ def modificar_estudiante(estudiantes):
 
 # baja estudiante
 def eliminar_estudiante(estudiantes):
-    if len(estudiantes) == 0:
-        print("No hay estudiantes\n")
-        return
+    
     mostrar_estudiantes(estudiantes)
 
-    pos=input("ingrese el legajo a eliminar: ")
+    pos = int(input("ingrese el legajo a eliminar: "))
 
-    for i in range (estudiantes):
+    for i in range (len(estudiantes)):
+
         if estudiantes [i][0] == pos:
             estudiantes [i][3] = False
             print("El estudiante fue eliminado correctamente: ", estudiantes [i][1])
+            input()
+
+    return
 
 #----------------------------FUNCIONES MATERIAS----------------------------
 
@@ -133,6 +135,7 @@ def menu_estudiantes(estudiantes):
             print('Funcion de modificar')
             #modificar_estudiante()
             input()
+
         elif seleccion == '3':
             eliminar_estudiante (estudiantes)
         
