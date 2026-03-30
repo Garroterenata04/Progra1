@@ -1,15 +1,26 @@
+#----------------------------RECURSOS----------------------------
+from os import system
+
+
+# ----------------------------FUNCIONES ESTUDIANTES----------------------------
+
 # función para agregar un estudiante
 def agregar_estudiante(estudiantes):
 
+    #asigno variable para el estudiante nuevo
     estudianteNuevo = []
-    
+
+
+    #Se autocompleta el legajo sumando uno al ultimo de la lista y se piden al usuario el resto de los datos
     legajo = estudiantes[-1][0] + 1
     nombre = input('Ingrese el nombre y apellido: \n')
     email = input('Ingrese el mail: \n')
 
+    #Se agrega a la lista cada item y luego se devuelve la lista con el estudiante nuevo
     estudianteNuevo.append(legajo)
     estudianteNuevo.append(nombre)
     estudianteNuevo.append(email)
+    estudianteNuevo.append(True)
     
     return(estudianteNuevo)
 
@@ -67,3 +78,134 @@ def eliminar_estudiante(estudiantes):
         print("estudiante eliminado correctamente: ", eliminado[1], "\n")
     else:
         print("indice ingresado incorrecto. ")
+
+
+#----------------------------FUNCIONES MATERIAS----------------------------
+
+def agregar_materia(materias):
+
+    materiaNueva = []
+
+    #Se autocompleta el id de materia y se pide al usuario el nombre
+    id = materias[-1][0] + 1
+    nombre = input('Ingrese el nombre de la materia: \n')
+
+    #Se agregan a la lista los parametros de la materia para luego devolverla
+    materiaNueva.append(id)
+    materiaNueva.append(nombre)
+    materiaNueva.append(True)
+
+    input(f'Se agregó correctamente la materia: {materiaNueva} presione enter para continuar')
+    
+    return(materiaNueva)
+
+
+#----------------------------FUNCIONES MENU----------------------------
+
+def menu_estudiantes(estudiantes):
+    
+
+    seleccion = " "
+
+    #Ciclo para el menu
+    while seleccion != '0':
+
+        system('clear')        
+
+        #Opciones
+        print("1. Alta de estudiante")
+        print("2. Modificacion de estudiante")
+        print("3. Baja de estudiante")
+        print("4. Lista de estudiantes")
+        print("0. Volver")
+
+        seleccion = input ('Opcion: ')
+
+
+        #Asigno funcion en base a la opcion ingresada y capturo el error en un numero no esperado
+        if seleccion == '1':
+            
+            system('clear')
+            estudiantes.append(agregar_estudiante(estudiantes))
+
+        elif seleccion == '2':
+
+            system('clear')
+
+            print('Funcion de modificar')
+            #modificar_estudiante()
+            input()
+        elif seleccion == '3':
+
+            system('clear')
+            
+            print('Funcion baja')
+            #mostrar_estudiantes()
+            input()
+        elif seleccion == '4':
+
+            system('clear')
+
+            print('2. Funcion listar')
+            print(estudiantes)
+            #Listar_estudiantes()        
+            input()
+
+        elif seleccion == '0':
+
+            print('volviendo al menu anterior...')         
+            input()
+        
+        else:
+            system('clear')
+            print('Opcion invalida')
+            input()
+
+    return()
+
+def menu_materias (materias):
+
+    seleccion = ""
+
+    #ciclo para el menu de materias
+    while seleccion != '0':
+
+        system('clear')
+
+        print("1. Alta de materias")
+        print("2. Modificacion de materias")
+        print("3. Baja de materia")
+        print("4. Lista de materias")
+        print("0. Volver\n")
+
+        seleccion = input('Opcion:')
+
+        #Asigno funcion en base a la opcion ingresada y capturo el error en un numero no esperado
+        if seleccion == '1':
+
+            system('clear')
+
+            materias.append(agregar_materia(materias))
+        
+        elif seleccion == '2':
+            input()
+
+        elif seleccion == '3':
+            input()
+
+        elif seleccion == '4':
+
+            system('clear')
+
+            print('2. Funcion listar')
+            print(materias)
+            #Listar_estudiantes()        
+            input()
+
+        elif seleccion == '0':
+
+            print('volviendo al menu anterior...')         
+            input()
+
+        else:
+            input()
