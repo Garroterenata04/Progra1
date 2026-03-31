@@ -41,7 +41,7 @@ def mostrar_estudiantes(estudiantes):
 
     # recorre la lista
     for i in range(len(estudiantes)):
-        print(i, estudiantes[i][0], estudiantes[i][1])
+        print(estudiantes[i][0], estudiantes[i][1])
 
     print()
 
