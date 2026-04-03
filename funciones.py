@@ -96,8 +96,47 @@ def modificar_estudiante(estudiantes):
     print("\nDatos modificados correctamente")
     input()
 
+#Otra versión de modificar estudiantes, separo la busqueda de la modificacion
+
+def prueba_modificar_estudiante(estudiantes):
+
+    mostrar_estudiantes(estudiantes)
+
+    legajo_busqueda = int(input('Ingrese el legajo a modificar'))
+
+    posicion = buscar_pos_estudiante(estudiantes, legajo_busqueda)
+
+    if posicion != -1:
+
+        nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
+        nuevo_mail = input("Ingrese el nuevo mail: ")
+
+        estudiantes[posicion][1] = nuevo_nombre
+        estudiantes[posicion][2] = nuevo_mail
 
 
+        print("Alumno modificado:", estudiantes[posicion])
+        input()
+
+    else:
+        print("No existe un alumno con ese legajo.")
+        input ()
+
+
+# Funcion para devolver la posicion del estudiante buscado por numero de legajo
+
+def buscar_pos_estudiante(estudiantes, legajo_buscado):
+     
+    i = 0
+
+    while i < len(estudiantes) and estudiantes [i][0] != legajo_buscado:
+         
+         i += 1
+
+    if i < len(estudiantes):
+        return i
+    else:
+        return -1
 
 
 
@@ -106,14 +145,16 @@ def eliminar_estudiante(estudiantes):
     
     mostrar_estudiantes(estudiantes)
 
-    pos = int(input("ingrese el legajo a eliminar: "))
+    legajo_buscar = int(input("ingrese el legajo a eliminar: "))
 
-    for i in range (len(estudiantes)):
+    posicion = buscar_pos_estudiante(estudiantes, legajo_buscar)
 
-        if estudiantes [i][0] == pos:
-            estudiantes [i][3] = False
-            print("El estudiante fue eliminado correctamente: ", estudiantes [i][1])
-            input()
+    if posicion != -1:
+        estudiantes[posicion][3] = False
+        input(f'el estudiante {estudiantes[posicion][0]} {estudiantes[posicion][1]} fue eliminado correctamente.')
+
+    else:
+        input(f'No se encontro un estudiante con el legajo: {legajo_buscar}')
 
     return
 
@@ -168,10 +209,8 @@ def menu_estudiantes(estudiantes):
         elif seleccion == '2':
 
             limpiar_pantalla()
-
-            print('Funcion de modificar')
-            #modificar_estudiante()
-            input()
+            prueba_modificar_estudiante(estudiantes)
+            #modificar_estudiante(estudiantes)
 
         elif seleccion == '3':
             eliminar_estudiante (estudiantes)
