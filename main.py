@@ -71,6 +71,7 @@ def main():
 
     estudiantes = [[1, 'juan Netto', 'jnetto@uade.edu.ar', True], [2, 'fulano', 'fulano@uade.edu.ar', True]]
     materias = [[1, 'matematicas', True]]
+    notas = []
     # lista donde se guardan los estudiantes
     # cada elemento será: [legajo, nombre, email]
 
@@ -102,9 +103,7 @@ def main():
 
         elif opcion == '3':
 
-            print('opcion 3')
-            input()
-            #menu_notas()
+            menu_notas()
 
         elif opcion == '4':
 
