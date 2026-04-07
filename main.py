@@ -1,11 +1,16 @@
 # importa todas las funciones del archivo funciones.py
 from funciones import *
 from matrices import *
+import re
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).parent
+USERS_FILE = SCRIPT_DIR / 'users.txt'
 
 def load_users():
     users = []
     try:
-        with open('users.txt', 'r') as f:
+        with open(USERS_FILE, 'r') as f:
             for line in f:
                 if line.strip():
                     email, password = line.strip().split(',')
@@ -15,7 +20,7 @@ def load_users():
     return users
 
 def save_users(users):
-    with open('users.txt', 'w') as f:
+    with open(USERS_FILE, 'w') as f:
         for user in users:
             f.write(f"{user['email']},{user['password']}\n")
 
@@ -40,7 +45,7 @@ def login_menu():
             input("Presione enter para continuar")
         elif opcion == '2':
             email = input('Email: ')
-            if '@' not in email:
+            if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
                 print("Email inválido")
                 input("Presione enter para continuar")
                 continue
