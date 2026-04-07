@@ -103,7 +103,7 @@ def main():
 
         elif opcion == '3':
 
-            menu_notas()
+            menu_notas(notas)
 
         elif opcion == '4':
 

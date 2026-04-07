@@ -182,7 +182,7 @@ def agregar_notas(notas):
     materia = input("Ingrese la materia: ")
     nota = input("Ingrese la nota: ")
 
-    notas.append([materia,nota])
+    notas.append([materia, nota])
     input(f"Se agrego correctamente la nota: {nota} a la materia: {materia}. ")
     input() #espaciado
 
@@ -192,15 +192,15 @@ def modificar_notas(notas):
         print ("np hay notas disponibles")
         input() #espaciado
         return
-    (notas)
 
-    materia_buscar=input=("Ingrese la materia donde quiere cambiar la nota. ")
+    materia_buscar=input("Ingrese la materia donde quiere cambiar la nota. ")
 
     for i in range (len(notas)):
         if notas [i][0] == materia_buscar:
             nueva=int(input("Ingrese la nueva nota: "))
-            notas[i][1]= nueva:
+            notas[i][1]= nueva
             print ("La nota fue modificada con exito: ")
+            input()
             return
         
         print("La materia no fue encontrada. Intente nuevamente. ")
