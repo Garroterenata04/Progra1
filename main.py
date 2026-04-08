@@ -1,6 +1,11 @@
 # importa todas las funciones del archivo funciones.py
 from funciones import *
 from matrices import *
+from notas import*
+#nivel de permiso que pueda ampliar todo y otro que pueda modificar
+#10 minutos 
+# 1 primer parcial 2 segundo, cuando se escribe que se imprima completo su nombre  
+# login minimo con 2 niveles de usuario 
 
 def load_users():
     users = []

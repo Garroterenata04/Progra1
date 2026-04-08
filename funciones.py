@@ -177,34 +177,6 @@ def agregar_materia(materias):
     
     return(materiaNueva)
 
-#----------------------------FUNCIONES NOTAS--------------------------------------------
-def agregar_notas(notas):
-    materia = input("Ingrese la materia: ")
-    nota = input("Ingrese la nota: ")
-
-    notas.append([materia, nota])
-    input(f"Se agrego correctamente la nota: {nota} a la materia: {materia}. ")
-    input() #espaciado
-
-#modificar nota
-def modificar_notas(notas):
-    if len(notas) == 0:
-        print ("np hay notas disponibles")
-        input() #espaciado
-        return
-
-    materia_buscar=input("Ingrese la materia donde quiere cambiar la nota. ")
-
-    for i in range (len(notas)):
-        if notas [i][0] == materia_buscar:
-            nueva=int(input("Ingrese la nueva nota: "))
-            notas[i][1]= nueva
-            print ("La nota fue modificada con exito: ")
-            input()
-            return
-        
-        print("La materia no fue encontrada. Intente nuevamente. ")
-        input()
 
 
 #----------------------------FUNCIONES MENU----------------------------
