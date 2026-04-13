@@ -80,7 +80,7 @@ def main():
     if not login_menu():
         return
 
-    estudiantes = [[1, 'juan Netto', 'jnetto@uade.edu.ar', True], [2, 'fulano', 'fulano@uade.edu.ar', True]]
+    estudiantes = cargar_estudiantes()
     materias = [[1, 'matematicas', True]]
     notas = []
     # lista donde se guardan los estudiantes
