@@ -1,6 +1,8 @@
 #----------------------------RECURSOS----------------------------
 import os
 
+from pathlib import Path
+
 def limpiar_pantalla():
     if os.name == 'nt':
         os.system('cls')      # Windows
@@ -10,25 +12,80 @@ def limpiar_pantalla():
 
 # ----------------------------FUNCIONES ESTUDIANTES----------------------------
 
+def cargar_estudiantes():
+    
+    alumnos = []
+    alumno_actual = {}
+
+    with open("estudiantes.txt", "r") as archivo:
+        for linea in archivo:
+            linea = linea.strip()
+
+            if linea == "":
+                if alumno_actual:
+                    alumnos.append(alumno_actual)
+                    alumno_actual = {}
+            else:
+                clave, valor = linea.split(": ")
+
+                if clave == "Legajo":
+                    alumno_actual["legajo"] = int(valor)
+                elif clave == "Nombre":
+                    alumno_actual["nombre"] = valor
+                elif clave == "Mail":
+                    alumno_actual["mail"] = valor
+                elif clave == "Estado":
+                    alumno_actual["estado"] = True if valor == "True" else False
+
+
+    if alumno_actual:
+        alumnos.append(alumno_actual)
+
+    return alumnos
+
+def listar_estudiantes_archivo(alumnos):
+
+    print("\n===== LISTA DE ALUMNOS =====\n")
+
+    for alumno in alumnos:
+        print(f"Legajo : {alumno['legajo']}")
+        print(f"Nombre : {alumno['nombre']}")
+        print(f"Mail   : {alumno['mail']}")
+        print(f"Estado : {'Activo' if alumno['estado'] else 'Inactivo'}")
+        print("-" * 30)
+
+    input()
+
+
 # función para agregar un estudiante
 def agregar_estudiante(estudiantes):
 
-    #asigno variable para el estudiante nuevo
-    estudianteNuevo = []
+    nombre = input('Ingrese el nombre del alumno: ')
+    mail = input('Ingrese el mail: ')
 
+    if len(estudiantes) == 0:
+        nuevo_legajo = 1
+    else:
+        nuevo_legajo = estudiantes[-1]['legajo'] + 1
 
-    #Se autocompleta el legajo sumando uno al ultimo de la lista y se piden al usuario el resto de los datos
-    legajo = estudiantes[-1][0] + 1
-    nombre = input('Ingrese el nombre y apellido: \n')
-    email = input('Ingrese el mail: \n')
+    nuevo_estudiante = {
+        'legajo': nuevo_legajo,
+        'nombre': nombre,
+        'mail': mail,
+        'estado': True 
+    }
 
-    #Se agrega a la lista cada item y luego se devuelve la lista con el estudiante nuevo
-    estudianteNuevo.append(legajo)
-    estudianteNuevo.append(nombre)
-    estudianteNuevo.append(email)
-    estudianteNuevo.append(True)
+    estudiantes.append(nuevo_estudiante)
+
+    with open('estudiantes.txt', "w") as archivo:
+        for alumno in estudiantes:
+            archivo.write(f"Legajo: {alumno['legajo']}\n")
+            archivo.write(f"Nombre: {alumno['nombre']}\n")
+            archivo.write(f"Mail: {alumno['mail']}\n")
+            archivo.write(f"Estado: {alumno['estado']}\n\n")
     
-    return(estudianteNuevo)
+    input('Alumno cargado exitosamente, presione enter para continuar...')
+
 
 
 
@@ -205,7 +262,7 @@ def menu_estudiantes(estudiantes):
         if seleccion == '1':
             
             limpiar_pantalla()
-            estudiantes.append(agregar_estudiante(estudiantes))
+            agregar_estudiante(estudiantes)
 
         elif seleccion == '2':
 
@@ -220,10 +277,7 @@ def menu_estudiantes(estudiantes):
         elif seleccion == '4':
 
             limpiar_pantalla()
-
-            print('2. Funcion listar')
-            print(estudiantes)
-            #Listar_estudiantes()        
+            listar_estudiantes_archivo(estudiantes)      
             input()
 
         elif seleccion == '0':

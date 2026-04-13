@@ -1,0 +1,49 @@
+Legajo: 1
+Nombre: Juan Netto
+Mail: jnetto@uade.edu.ar
+Estado: True
+
+Legajo: 2
+Nombre: Maria Lopez
+Mail: mlopez@uade.edu.ar
+Estado: True
+
+Legajo: 3
+Nombre: Carlos Perez
+Mail: cperez@uade.edu.ar
+Estado: False
+
+Legajo: 4
+Nombre: Lucia Gomez
+Mail: lgomez@uade.edu.ar
+Estado: True
+
+Legajo: 5
+Nombre: Martin Diaz
+Mail: mdiaz@uade.edu.ar
+Estado: True
+
+Legajo: 6
+Nombre: Sofia Ramirez
+Mail: sramirez@uade.edu.ar
+Estado: False
+
+Legajo: 7
+Nombre: Diego Fernandez
+Mail: dfernandez@uade.edu.ar
+Estado: True
+
+Legajo: 8
+Nombre: Valentina Castro
+Mail: vcastro@uade.edu.ar
+Estado: True
+
+Legajo: 9
+Nombre: Nicolas Ruiz
+Mail: nruiz@uade.edu.ar
+Estado: True
+
+Legajo: 10
+Nombre: Camila Torres
+Mail: ctorres@uade.edu.ar
+Estado: False
