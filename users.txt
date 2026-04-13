@@ -1,6 +1,3 @@
+admin@uade.edu.ar,admin
 guido@guido.com,123
-<<<<<<< HEAD
-garroterenata@gmail.com,renata
-=======
 uade@uade.com,1234
->>>>>>> 20736ad425f7312783fa0a840fa2d5664dd9c7a1
