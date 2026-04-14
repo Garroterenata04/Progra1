@@ -1,13 +1,15 @@
-# importa todas las funciones del archivo funciones.py
-from funciones import *
-from matrices import *
-from notas import*
+﻿import re
+from pathlib import Path
+
+from funciones import limpiar_pantalla
+from estudiantes import cargar_estudiantes, menu_estudiantes
+from materias import menu_materias
+from notas import menu_notas
+
 #nivel de permiso que pueda ampliar todo y otro que pueda modificar
 #10 minutos 
 # 1 primer parcial 2 segundo, cuando se escribe que se imprima completo su nombre  
 # login minimo con 2 niveles de usuario 
-import re
-from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
 USERS_FILE = SCRIPT_DIR / 'users.txt'
@@ -137,5 +139,5 @@ def main():
 
 
 
-# ejecuta el programa
-main()
+if __name__ == '__main__':
+    main()
