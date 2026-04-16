@@ -116,7 +116,7 @@ def main():
 
         elif opcion == '3':
 
-            menu_notas(notas)
+            menu_notas(notas, estudiantes, materias)
 
         elif opcion == '4':
 

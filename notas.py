@@ -1,124 +1,183 @@
-def menu_notas(notas):
+from funciones import limpiar_pantalla
+
+#----------------------------MENU NOTAS----------------------------
+
+def menu_notas(notas, estudiantes, materias):
+
     seleccion = ""
 
     while seleccion != "0":
-        print("1 - Ingrese la nota. ")
-        print("2 - Modifique la nota. ")
-        print("3 - Promedio de notas. ")
-        print("4 - Lista de notas. ")
-        print("5 - Eliminar nota. ")
-        print("0 - Volver al inicio")
+
+        limpiar_pantalla()
+
+        print("1 - Ingresar nota")
+        print("2 - Modificar nota")
+        print("3 - Promedio de notas")
+        print("4 - Lista de notas")
+        print("5 - Eliminar nota")
+        print("0 - Volver")
 
         seleccion = input("Opcion: ")
 
         if seleccion == "1":
-            agregar_nota(notas)
+            agregar_nota(notas, estudiantes, materias)
+
         elif seleccion == "2":
             modificar_nota(notas)
+
         elif seleccion == "3":
             promedio_nota(notas)
+
         elif seleccion == "4":
             lista_nota(notas)
+
         elif seleccion == "5":
             eliminar_nota(notas)
+
         elif seleccion == "0":
-            input("Volviendo al inicio...")
+            input("Volviendo...")
+
         else:
-            input("Seleccion invalida, toque ENTER para continuar. ")
+            input("Opcion invalida")
 
 
-def agregar_nota(notas):
-    opc = input("1 - Ambas notas de los parciales | 2 - Primer parcial | 3 - Segundo parcial. ")
+#----------------------------AGREGAR NOTA----------------------------
 
-    if opc == "1":
-        p1 = int(input("Nota del primer parcial: "))
-        p2 = int(input("Nota del segundo parcial: "))
-        notas.append([p1, p2])
-    elif opc == "2":
-        p1 = int(input("Nota del primer parcial: "))
-        notas.append([p1, 0])
-    elif opc == "3":
-        p2 = int(input("Nota del segundo parcial: "))
-        notas.append([0, p2])
-    else:
-        print("Opcion ingresada invalida.")
+def agregar_nota(notas, estudiantes, materias):
 
+    if len(estudiantes) == 0:
+        input("No hay estudiantes cargados")
+        return
 
-def modificar_nota(notas):
+    if len(materias) == 0:
+        input("No hay materias cargadas")
+        return
+
     if len(notas) == 0:
-        print("No hay notas disponibles.")
-        return
+        nota_id = 1
+    else:
+        nota_id = notas[-1][0] + 1
 
-    for i, nota in enumerate(notas):
-        print(i, "-", nota)
+    alumno_id = int(input("Ingrese el legajo del alumno: "))
+    materia_id = int(input("Ingrese el ID de la materia: "))
+    nota = int(input("Ingrese la nota: "))
 
-    indice = int(input("Ingrese el indice que quiere modificar: "))
+    print("Tipo de nota:")
+    print("1 - Primer parcial")
+    print("2 - Segundo parcial")
+    print("3 - Final")
 
-    if indice < 0 or indice >= len(notas):
-        print("El indice ingresado es invalido")
-        return
-
-    opcion = input("¿Desea modificar el primer parcial (1) o el segundo parcial (2)?")
+    opcion = input("Seleccione: ")
 
     if opcion == "1":
-        nueva = int(input("Ingrese la nueva nota del primer parcial: "))
-        notas[indice][0] = nueva
+        tipo = "Primer parcial"
     elif opcion == "2":
-        nueva = int(input("Ingrese la nueva nota del segundo parcial: "))
-        notas[indice][1] = nueva
+        tipo = "Segundo parcial"
+    elif opcion == "3":
+        tipo = "Final"
     else:
-        print("El numero ingresado es invalido.")
+        input("Tipo invalido")
         return
 
+    notas.append([nota_id, alumno_id, materia_id, nota, tipo])
+
+    input("Nota cargada correctamente")
+
+
+#----------------------------LISTAR NOTAS----------------------------
+
+def lista_nota(notas):
+
+    if len(notas) == 0:
+        input("No hay notas")
+        return
+
+    for n in notas:
+        print("ID:", n[0])
+        print("Alumno:", n[1])
+        print("Materia:", n[2])
+        print("Nota:", n[3])
+        print("Tipo:", n[4])
+
+    input()
+
+
+#----------------------------MODIFICAR NOTA----------------------------
+
+def modificar_nota(notas):
+
+    if len(notas) == 0:
+        input("No hay notas")
+        return
+
+    for n in notas:
+        print("ID:", n[0])
+        print("Nota:", n[3])
+        print("Tipo:", n[4])
+
+    nota_id = int(input("Ingrese el ID de la nota a modificar: "))
+
+    posicion = -1
+
+    for i in range(len(notas)):
+        if notas[i][0] == nota_id:
+            posicion = i
+            break
+
+    if posicion == -1:
+        input("No se encontro la nota")
+        return
+
+    nueva = int(input("Nueva nota: "))
+    notas[posicion][3] = nueva
+
+    input("Nota modificada")
+
+
+#----------------------------ELIMINAR NOTA----------------------------
+
+def eliminar_nota(notas):
+
+    if len(notas) == 0:
+        input("No hay notas")
+        return
+
+    for n in notas:
+        print("ID:", n[0])
+        print("Nota:", n[3])
+        print("Tipo:", n[4])
+
+    nota_id = int(input("Ingrese el ID de la nota a eliminar: "))
+
+    posicion = -1
+
+    for i in range(len(notas)):
+        if notas[i][0] == nota_id:
+            posicion = i
+            break
+
+    if posicion == -1:
+        input("No se encontro la nota")
+        return
+
+    notas.pop(posicion)
+
+    input("Nota eliminada correctamente")
+
+
+#----------------------------PROMEDIO----------------------------
 
 def promedio_nota(notas):
+
     if len(notas) == 0:
-        print("No hay notas disponibles.")
+        input("No hay notas")
         return
 
     suma = 0
-    cantidad = 0
 
-    for x in notas:
-        suma += x[0] + x[1]
-        cantidad += 2
+    for n in notas:
+        suma += n[3]
 
-    promedio = suma // cantidad
-    print("El promedio de las notas es:", promedio)
+    promedio = suma / len(notas)
 
-
-def lista_nota(notas):
-    if len(notas) == 0:
-        print("No hay notas disponibles.")
-        return
-
-    for x in notas:
-        print("Primer parcial:", x[0], "- Segundo parcial:", x[1])
-
-
-def eliminar_nota(notas):
-    if len(notas) == 0:
-        print("No hay notas disponibles.")
-        return
-
-    for i, nota in enumerate(notas):
-        print(i, "Primer parcial:", nota[0], "Segundo parcial:", nota[1])
-
-    indice = int(input("Legajo del alumno: "))
-
-    if indice < 0 or indice >= len(notas):
-        print("El indice ingresado es invalido.")
-        return
-
-    parcial = int(input("¿Que nota queres eliminar? (1 - primer parcial.  2 - segundo parcial): "))
-
-    if parcial == 1:
-        notas[indice][0] = 0
-    elif parcial == 2:
-        notas[indice][1] = 0
-    else:
-        print("Opcion ingresada invalida.")
-        return
-
-    notas.pop(indice)
-    print("La nota fue eliminada con exito.")
+    input("Promedio: " + str(promedio))
