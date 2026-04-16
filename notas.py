@@ -78,6 +78,11 @@ def agregar_nota(notas, estudiantes, materias):
     else:
         input("Tipo invalido")
         return
+    
+    for n in notas:
+        if n[1] == alumno_id and n[2] == materia_id and n[4] == tipo:
+            input("Esa nota ya existe para este alumno")
+            return
 
     notas.append([nota_id, alumno_id, materia_id, nota, tipo])
 
