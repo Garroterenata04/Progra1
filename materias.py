@@ -3,11 +3,11 @@ from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
 
 def cargar_materias():
     return [
-        {"id": 1, "nombre": "Matematicas", "estado": True},
-        {"id": 2, "nombre": "Fisica", "estado": True},
-        {"id": 3, "nombre": "Quimica", "estado": True},
-        {"id": 4, "nombre": "Programacion", "estado": True},
-        {"id": 5, "nombre": "Ingles", "estado": True}
+        {"id": 1, "nombre": "Matematicas", "activo": True},
+        {"id": 2, "nombre": "Fisica", "activo": True},
+        {"id": 3, "nombre": "Quimica", "activo": True},
+        {"id": 4, "nombre": "Programacion", "activo": True},
+        {"id": 5, "nombre": "Ingles", "activo": True}
     ]
 
 
@@ -25,7 +25,7 @@ def agregar_materia(materias):
     materiaNueva = {
         'id': nueva_id,
         'nombre': nombre,
-        'estado': True
+        'activo': True
     }
 
     materias.append(materiaNueva)
@@ -39,7 +39,7 @@ def mostrar_materias(materias):
         return
 
     for materia in materias:
-        if materia['estado']:
+        if materia['activo']:
             print(f"{materia['id']} - {materia['nombre']}")
 
     print()
@@ -55,15 +55,15 @@ def listar_materias(materias):
     print("=== LISTA DE MATERIAS ===")
     print()
     for materia in materias:
-        if materia['estado']:
-            print(f"ID: {materia['id']}")
-            print(f"Nombre: {materia['nombre']}")
-            print("-" * 30)
+        print(f"ID: {materia['id']}")
+        print(f"Nombre: {materia['nombre']}")
+        print(f"Activo: {'Sí' if materia['activo'] else 'No'}")
+        print("-" * 30)
     
     input()
 
 
-def buscar_pos_materia(materias, id_buscado):
+def buscar_por_materia(materias, id_buscado):
     for index, materia in enumerate(materias):
         if materia['id'] == id_buscado:
             return index
@@ -77,7 +77,7 @@ def modificar_materia(materias):
     mostrar_materias(materias)
 
     id_busqueda = validar_numero('Ingrese el ID de la materia a modificar: ')
-    posicion = buscar_pos_materia(materias, id_busqueda)
+    posicion = buscar_por_materia(materias, id_busqueda)
 
     if posicion != -1:
         nuevo_nombre = input("Ingrese el nuevo nombre de la materia: ")
@@ -100,10 +100,10 @@ def eliminar_materia(materias):
     mostrar_materias(materias)
 
     id_buscar = validar_numero("Ingrese el ID de la materia a eliminar: ")
-    posicion = buscar_pos_materia(materias, id_buscar)
+    posicion = buscar_por_materia(materias, id_buscar)
 
     if posicion != -1:
-        materias[posicion]['estado'] = False
+        materias[posicion]['activo'] = False
         input(f'La materia {materias[posicion]["id"]} {materias[posicion]["nombre"]} fue eliminada correctamente.')
     else:
         input(f'No se encontro una materia con el ID: {id_buscar}')

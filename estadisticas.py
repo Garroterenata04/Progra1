@@ -8,8 +8,8 @@ def estadisticas_generales(estudiantes, materias, notas):
     print("=== ESTADISTICAS GENERALES ===")
     print()
     
-    estudiantes_activos = [e for e in estudiantes if e["estado"]]
-    materias_activas = [m for m in materias if m["estado"]]
+    estudiantes_activos = [e for e in estudiantes if e["activo"]]
+    materias_activas = [m for m in materias if m["activo"]]
     
     print(f"Total estudiantes activos: {len(estudiantes_activos)}")
     print(f"Total materias activas: {len(materias_activas)}")
@@ -33,7 +33,7 @@ def promedio_general_estudiantes(estudiantes, notas):
         print("No hay notas registradas")
     else:
         for estudiante in estudiantes:
-            if estudiante["estado"]:
+            if estudiante["activo"]:
                 notas_alumno = [n["nota"] for n in notas if n["id_estudiante"] == estudiante["legajo"]]
                 if notas_alumno:
                     promedio = sum(notas_alumno) / len(notas_alumno)
@@ -72,7 +72,7 @@ def promedio_estudiante_materias(estudiantes, materias, notas):
         print("No hay notas para este estudiante")
     else:
         for materia in materias:
-            if materia["estado"]:
+            if materia["activo"]:
                 notas_materia = [n["nota"] for n in notas_alumno if n["id_materia"] == materia["id"]]
                 if notas_materia:
                     promedio = sum(notas_materia) / len(notas_materia)
@@ -92,7 +92,7 @@ def promedio_materia(materias, notas):
     print()
     
     for m in materias:
-        if m["estado"]:
+        if m["activo"]:
             print(f"{m['id']} - {m['nombre']}")
     
     print()

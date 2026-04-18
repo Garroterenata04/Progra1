@@ -1,4 +1,4 @@
-from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
+from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota
 
 
 def cargar_notas():
@@ -76,15 +76,31 @@ def agregar_nota(notas, estudiantes, materias):
 
     print("\n--- ESTUDIANTES ---")
     for e in estudiantes:
-        print(f"ID : {e['legajo']} - Nombre: {e['nombre']}")
+        if e['activo']:
+            print(f"ID : {e['legajo']} - Nombre: {e['nombre']}")
 
     print("\n--- MATERIAS ---")
     for m in materias:
-        print(f"ID: {m['id']} - Nombre: {m['nombre']}")
+        if m['activo']:
+            print(f"ID: {m['id']} - Nombre: {m['nombre']}")
 
     alumno_id = validar_numero("Ingrese el legajo del alumno: ")
+    
+    # Validar que el estudiante exista y esté activo
+    estudiante_existe = any(e['legajo'] == alumno_id and e['activo'] for e in estudiantes)
+    if not estudiante_existe:
+        input("El estudiante no existe o está inactivo")
+        return
+    
     materia_id = validar_numero("Ingrese el ID de la materia: ")
-    nota = validar_numero("Ingrese la nota: ")
+    
+    # Validar que la materia exista y esté activa
+    materia_existe = any(m['id'] == materia_id and m['activo'] for m in materias)
+    if not materia_existe:
+        input("La materia no existe o está inactiva")
+        return
+    
+    nota = validar_nota("Ingrese la nota (0-10): ")
 
     print("Tipo de nota:")
     print("1 - Primer parcial")
@@ -191,7 +207,7 @@ def modificar_nota(notas):
         input("No se encontro la nota")
         return
 
-    nueva = validar_numero("Nueva nota: ")
+    nueva = validar_nota("Nueva nota (0-10): ")
     notas[posicion]["nota"] = nueva
 
     input("Nota modificada")

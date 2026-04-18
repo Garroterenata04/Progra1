@@ -1,4 +1,5 @@
-﻿from funciones import limpiar_pantalla, validar_email, validar_no_vacio
+﻿import getpass
+from funciones import limpiar_pantalla, validar_email, validar_no_vacio
 from estudiantes import cargar_estudiantes, menu_estudiantes
 from materias import cargar_materias, menu_materias
 from notas import cargar_notas, menu_notas
@@ -31,10 +32,10 @@ def login_menu():
                 print("Email no puede estar vacío")
                 email = input('Email: ')
             
-            password = input('Contraseña: ')
+            password = getpass.getpass('Contraseña: ')
             while not validar_no_vacio(password):
                 print("Contraseña no puede estar vacía")
-                password = input('Contraseña: ')
+                password = getpass.getpass('Contraseña: ')
             for user in users:
                 if user['email'] == email and user['password'] == password:
                     print("Login exitoso")
@@ -56,20 +57,20 @@ def login_menu():
                 print("Email ya registrado")
                 input("Presione enter para continuar")
                 continue
-            password = input('Contraseña: ')
+            password = getpass.getpass('Contraseña: ')
             while not validar_no_vacio(password):
                 print("Contraseña no puede estar vacía")
-                password = input('Contraseña: ')
+                password = getpass.getpass('Contraseña: ')
             
-            confirm = input('Confirmar contraseña: ')
+            confirm = getpass.getpass('Confirmar contraseña: ')
             while not validar_no_vacio(confirm):
                 print("Confirmar contraseña no puede estar vacío")
-                confirm = input('Confirmar contraseña: ')
+                confirm = getpass.getpass('Confirmar contraseña: ')
             if password != confirm:
                 print("Contraseñas no coinciden")
                 input("Presione enter para continuar")
                 continue
-            users.append({'email': email, 'password': password})
+            users.append({'email': email, 'password': password, 'rol': 'viewer'})
             print("Usuario creado exitosamente")
             input("Presione enter para continuar")
         elif opcion == '0':
@@ -88,7 +89,7 @@ def main():
     materias = cargar_materias()
     notas = cargar_notas()
     # lista donde se guardan los estudiantes
-    # cada elemento será: {legajo, nombre, mail, estado}
+    # cada elemento será: {legajo, nombre, mail, activo}
 
 
     opcion = ""
