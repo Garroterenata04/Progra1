@@ -115,6 +115,8 @@ def menu_estudiantes(estudiantes, rol):
 
     while seleccion != '0':
         limpiar_pantalla()
+        print("=== MENU ESTUDIANTES ===")
+        print()
 
         if rol == 'admin':
             print("1. Alta de estudiante")

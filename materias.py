@@ -30,6 +30,8 @@ def menu_materias(materias, rol):
 
     while seleccion != '0':
         limpiar_pantalla()
+        print("=== MENU MATERIAS ===")
+        print()
 
         if rol == 'admin':
             print("1. Alta de materias")
