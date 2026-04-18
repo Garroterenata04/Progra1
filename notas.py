@@ -1,4 +1,4 @@
-from funciones import limpiar_pantalla
+from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
 
 
 def cargar_notas():
@@ -82,9 +82,9 @@ def agregar_nota(notas, estudiantes, materias):
     for m in materias:
         print(f"ID: {m['id']} - Nombre: {m['nombre']}")
 
-    alumno_id = int(input("Ingrese el legajo del alumno: "))
-    materia_id = int(input("Ingrese el ID de la materia: "))
-    nota = int(input("Ingrese la nota: "))
+    alumno_id = validar_numero("Ingrese el legajo del alumno: ")
+    materia_id = validar_numero("Ingrese el ID de la materia: ")
+    nota = validar_numero("Ingrese la nota: ")
 
     print("Tipo de nota:")
     print("1 - Primer parcial")
@@ -92,6 +92,10 @@ def agregar_nota(notas, estudiantes, materias):
     print("3 - Final")
 
     opcion = input("Seleccione: ")
+    
+    while not validar_no_vacio(opcion):
+        print("Opción inválida (no puede estar vacía)")
+        opcion = input("Seleccione: ")
 
     if opcion == "1":
         tipo = "Primer parcial"
@@ -174,7 +178,7 @@ def modificar_nota(notas):
         print("Nota:", n["nota"])
         print("Tipo:", n["descripcion"])
 
-    nota_id = int(input("Ingrese el ID de la nota a modificar: "))
+    nota_id = validar_numero("Ingrese el ID de la nota a modificar: ")
 
     posicion = -1
 
@@ -187,7 +191,7 @@ def modificar_nota(notas):
         input("No se encontro la nota")
         return
 
-    nueva = int(input("Nueva nota: "))
+    nueva = validar_numero("Nueva nota: ")
     notas[posicion]["nota"] = nueva
 
     input("Nota modificada")
@@ -208,7 +212,7 @@ def eliminar_nota(notas):
         print("ID:", n["id"])
         print("Nota:", n["nota"])
         print("Tipo:", n["descripcion"])
-    nota_id = int(input("Ingrese el ID de la nota a eliminar: "))
+    nota_id = validar_numero("Ingrese el ID de la nota a eliminar: ")
 
     posicion = -1
 

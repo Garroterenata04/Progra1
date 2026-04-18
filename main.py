@@ -1,4 +1,4 @@
-﻿from funciones import limpiar_pantalla, validar_email
+﻿from funciones import limpiar_pantalla, validar_email, validar_no_vacio
 from estudiantes import cargar_estudiantes, menu_estudiantes
 from materias import cargar_materias, menu_materias
 from notas import cargar_notas, menu_notas
@@ -27,7 +27,14 @@ def login_menu():
         opcion = input('Opción: ')
         if opcion == '1':
             email = input('Email: ')
+            while not validar_no_vacio(email):
+                print("Email no puede estar vacío")
+                email = input('Email: ')
+            
             password = input('Contraseña: ')
+            while not validar_no_vacio(password):
+                print("Contraseña no puede estar vacía")
+                password = input('Contraseña: ')
             for user in users:
                 if user['email'] == email and user['password'] == password:
                     print("Login exitoso")
@@ -37,6 +44,10 @@ def login_menu():
             input("Presione enter para continuar")
         elif opcion == '2':
             email = input('Email: ')
+            while not validar_no_vacio(email):
+                print("Email no puede estar vacío")
+                email = input('Email: ')
+            
             if not validar_email(email):
                 print("Email inválido")
                 input("Presione enter para continuar")
@@ -46,7 +57,14 @@ def login_menu():
                 input("Presione enter para continuar")
                 continue
             password = input('Contraseña: ')
+            while not validar_no_vacio(password):
+                print("Contraseña no puede estar vacía")
+                password = input('Contraseña: ')
+            
             confirm = input('Confirmar contraseña: ')
+            while not validar_no_vacio(confirm):
+                print("Confirmar contraseña no puede estar vacío")
+                confirm = input('Confirmar contraseña: ')
             if password != confirm:
                 print("Contraseñas no coinciden")
                 input("Presione enter para continuar")
