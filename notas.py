@@ -1,8 +1,19 @@
 from funciones import limpiar_pantalla
 
+
+def cargar_notas():
+    return [
+        {"id": 1, "id_estudiante": 1, "id_materia": 1, "nota": 8, "descripcion": "Primer parcial"},
+        {"id": 2, "id_estudiante": 1, "id_materia": 2, "nota": 9, "descripcion": "Segundo parcial"},
+        {"id": 3, "id_estudiante": 2, "id_materia": 1, "nota": 7, "descripcion": "Primer parcial"},
+        {"id": 4, "id_estudiante": 2, "id_materia": 3, "nota": 10, "descripcion": "Final"},
+        {"id": 5, "id_estudiante": 3, "id_materia": 4, "nota": 6, "descripcion": "Primer parcial"}
+    ]
+
+
 #----------------------------MENU NOTAS----------------------------
 
-def menu_notas(notas, estudiantes, materias):
+def menu_notas(notas, estudiantes, materias, rol):
 
     seleccion = ""
 
@@ -10,28 +21,33 @@ def menu_notas(notas, estudiantes, materias):
 
         limpiar_pantalla()
 
-        print("1 - Ingresar nota")
-        print("2 - Modificar nota")
-        print("3 - Promedio de notas")
-        print("4 - Lista de notas")
-        print("5 - Eliminar nota")
+        if rol == 'admin':
+            print("1 - Ingresar nota")
+            print("2 - Modificar nota")
+            print("3 - Promedio de notas")
+            print("4 - Lista de notas")
+            print("5 - Eliminar nota")
+        else:  # viewer
+            print("1 - Promedio de notas")
+            print("2 - Lista de notas")
+        
         print("0 - Volver")
 
         seleccion = input("Opcion: ")
 
-        if seleccion == "1":
+        if seleccion == "1" and rol == 'admin':
             agregar_nota(notas, estudiantes, materias)
 
-        elif seleccion == "2":
+        elif seleccion == "2" and rol == 'admin':
             modificar_nota(notas)
 
-        elif seleccion == "3":
+        elif (seleccion == "3" and rol == 'admin') or (seleccion == "1" and rol == 'viewer'):
             promedio_nota(notas)
 
-        elif seleccion == "4":
+        elif (seleccion == "4" and rol == 'admin') or (seleccion == "2" and rol == 'viewer'):
             lista_nota(notas)
 
-        elif seleccion == "5":
+        elif seleccion == "5" and rol == 'admin':
             eliminar_nota(notas)
 
         elif seleccion == "0":
@@ -60,7 +76,7 @@ def agregar_nota(notas, estudiantes, materias):
 
     print("\n--- ESTUDIANTES ---")
     for e in estudiantes:
-        print(f"ID : {e['id']} - Nombre: {e['nombre']}")
+        print(f"ID : {e['legajo']} - Nombre: {e['nombre']}")
 
     print("\n--- MATERIAS ---")
     for m in materias:

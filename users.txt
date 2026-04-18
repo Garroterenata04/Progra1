@@ -1,5 +1,0 @@
-admin@uade.edu.ar,admin
-guido@guido.com,123
-uade@uade.com,1234
-1@gmail.com,123456
-garrote@gmail.com,garrote
