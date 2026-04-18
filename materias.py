@@ -1,14 +1,5 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
-
-
-def cargar_materias():
-    return [
-        {"id": 1, "nombre": "Matematicas", "activo": True},
-        {"id": 2, "nombre": "Fisica", "activo": True},
-        {"id": 3, "nombre": "Quimica", "activo": True},
-        {"id": 4, "nombre": "Programacion", "activo": True},
-        {"id": 5, "nombre": "Ingles", "activo": True}
-    ]
+from matrices import cargar_materias
 
 
 def agregar_materia(materias):

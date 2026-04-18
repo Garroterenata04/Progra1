@@ -1,12 +1,5 @@
 from funciones import limpiar_pantalla, validar_email, validar_no_vacio, validar_numero
-
-
-def cargar_estudiantes():
-    return [
-        {'legajo': 1, 'nombre': 'Juan Pérez', 'mail': 'juan@mail.com', 'activo': True},
-        {'legajo': 2, 'nombre': 'María Gómez', 'mail': 'maria@mail.com', 'activo': True},
-        {'legajo': 3, 'nombre': 'Lucía Fernández', 'mail': 'lucia@mail.com', 'activo': False},
-    ]
+from matrices import cargar_estudiantes
 
 
 def guardar_estudiantes(estudiantes):
