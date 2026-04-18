@@ -56,7 +56,15 @@ def agregar_nota(notas, estudiantes, materias):
     if len(notas) == 0:
         nota_id = 1
     else:
-        nota_id = notas[-1][0] + 1
+        nota_id = notas[-1]["id"] + 1
+
+    print("\n--- ESTUDIANTES ---")
+    for e in estudiantes:
+        print(f"ID : {e['id']} - Nombre: {e['nombre']}")
+
+    print("\n--- MATERIAS ---")
+    for m in materias:
+        print(f"ID: {m['id']} - Nombre: {m['nombre']}")
 
     alumno_id = int(input("Ingrese el legajo del alumno: "))
     materia_id = int(input("Ingrese el ID de la materia: "))
@@ -79,12 +87,21 @@ def agregar_nota(notas, estudiantes, materias):
         input("Tipo invalido")
         return
     
-    for n in notas:
-        if n[1] == alumno_id and n[2] == materia_id and n[4] == tipo:
-            input("Esa nota ya existe para este alumno")
-            return
+    existe = list(filter(lambda n: n["id_estudiante"] == alumno_id  #no existe si esta vacia
+                               and n["id_materia"] == materia_id 
+                               and n["descripcion"] == tipo, notas))
 
-    notas.append([nota_id, alumno_id, materia_id, nota, tipo])
+    if existe: #lambda, filter
+        input("Esa nota ya existe para este alumno")
+        return
+
+    notas.append({#diccionarios y para que el acceso sea mas claro
+        "id": nota_id,
+        "id_estudiante": alumno_id,
+        "id_materia": materia_id,
+        "nota": nota,
+        "descripcion": tipo
+    })
 
     input("Nota cargada correctamente")
 
@@ -98,11 +115,11 @@ def lista_nota(notas):
         return
 
     for n in notas:
-        print("ID:", n[0])
-        print("Alumno:", n[1])
-        print("Materia:", n[2])
-        print("Nota:", n[3])
-        print("Tipo:", n[4])
+        print("ID:", n["id"])
+        print("Alumno:", n["id_estudiante"])
+        print("Materia:", n["id_materia"])
+        print("Nota:", n["nota"])
+        print("Tipo:", n["descripcion"])
 
     input()
 
@@ -116,16 +133,16 @@ def modificar_nota(notas):
         return
 
     for n in notas:
-        print("ID:", n[0])
-        print("Nota:", n[3])
-        print("Tipo:", n[4])
+        print("ID:", n["id"])
+        print("Nota:", n["nota"])
+        print("Tipo:", n["descripcion"])
 
     nota_id = int(input("Ingrese el ID de la nota a modificar: "))
 
     posicion = -1
 
     for i in range(len(notas)):
-        if notas[i][0] == nota_id:
+        if notas[i]["id"] == nota_id:
             posicion = i
             break
 
@@ -134,7 +151,7 @@ def modificar_nota(notas):
         return
 
     nueva = int(input("Nueva nota: "))
-    notas[posicion][3] = nueva
+    notas[posicion]["nota"] = nueva
 
     input("Nota modificada")
 
@@ -148,16 +165,15 @@ def eliminar_nota(notas):
         return
 
     for n in notas:
-        print("ID:", n[0])
-        print("Nota:", n[3])
-        print("Tipo:", n[4])
-
+        print("ID:", n["id"])
+        print("Nota:", n["nota"])
+        print("Tipo:", n["descripcion"])
     nota_id = int(input("Ingrese el ID de la nota a eliminar: "))
 
     posicion = -1
 
     for i in range(len(notas)):
-        if notas[i][0] == nota_id:
+        if notas[i]["id"] == nota_id:
             posicion = i
             break
 
@@ -171,18 +187,28 @@ def eliminar_nota(notas):
 
 
 #----------------------------PROMEDIO----------------------------
-
 def promedio_nota(notas):
 
     if len(notas) == 0:
         input("No hay notas")
         return
 
+    alumno_id = int(input("ID estudiante: "))
+    materia_id = int(input("ID materia: "))
+
     suma = 0
+    contador = 0
 
     for n in notas:
-        suma += n[3]
+        if n["id_estudiante"] == alumno_id and n["id_materia"] == materia_id:
+            suma += n["nota"]
+            contador += 1
 
-    promedio = suma / len(notas)
+    if contador == 0:
+        input("No hay notas para ese alumno/materia")
+        return
 
-    input("Promedio: " + str(promedio))
+    promedio = suma / contador
+
+    print("Promedio:", promedio)
+    input()
