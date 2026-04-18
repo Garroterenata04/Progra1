@@ -2,11 +2,8 @@
 from estudiantes import cargar_estudiantes, menu_estudiantes
 from materias import cargar_materias, menu_materias
 from notas import cargar_notas, menu_notas
+from estadisticas import mostrar_estadisticas
 
-#nivel de permiso que pueda ampliar todo y otro que pueda modificar
-#10 minutos 
-# 1 primer parcial 2 segundo, cuando se escribe que se imprima completo su nombre  
-# login minimo con 2 niveles de usuario 
 
 def cargar_usuarios():
     return [
@@ -22,7 +19,8 @@ def login_menu():
     users = cargar_usuarios()
     while True:
         limpiar_pantalla()
-        print("Sistema de Gestión Académica")
+        print("=== SISTEMA DE GESTIÓN ACADÉMICA ===")
+        print()
         print("1 - Iniciar sesión")
         print("2 - Crear usuario")
         print("0 - Salir")
@@ -82,6 +80,8 @@ def main():
         
 
         limpiar_pantalla()
+        print("=== MENU PRINCIPAL ===")
+        print()
 
         print("1 - Menu estudiantes")
         print("2 - Menu materias")
@@ -106,11 +106,7 @@ def main():
 
         elif opcion == '4':
 
-            print('Estadisticas:')
-            print(f'Total estudiantes: {len([e for e in estudiantes if e["estado"]])}')
-            print(f'Total materias: {len([m for m in materias if m["estado"]])}')
-            print(f'Total notas: {len(notas)}')
-            input("Presione enter para continuar")
+            mostrar_estadisticas(estudiantes, materias, notas)
         
         elif opcion == '0':
 

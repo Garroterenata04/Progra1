@@ -20,16 +20,16 @@ def menu_notas(notas, estudiantes, materias, rol):
     while seleccion != "0":
 
         limpiar_pantalla()
+        print("=== MENU NOTAS ===")
+        print()
 
         if rol == 'admin':
             print("1 - Ingresar nota")
             print("2 - Modificar nota")
-            print("3 - Promedio de notas")
-            print("4 - Lista de notas")
-            print("5 - Eliminar nota")
+            print("3 - Lista de notas")
+            print("4 - Eliminar nota")
         else:  # viewer
-            print("1 - Promedio de notas")
-            print("2 - Lista de notas")
+            print("1 - Lista de notas")
         
         print("0 - Volver")
 
@@ -42,12 +42,9 @@ def menu_notas(notas, estudiantes, materias, rol):
             modificar_nota(notas)
 
         elif (seleccion == "3" and rol == 'admin') or (seleccion == "1" and rol == 'viewer'):
-            promedio_nota(notas)
+            lista_nota(notas, estudiantes, materias)
 
-        elif (seleccion == "4" and rol == 'admin') or (seleccion == "2" and rol == 'viewer'):
-            lista_nota(notas)
-
-        elif seleccion == "5" and rol == 'admin':
+        elif seleccion == "4" and rol == 'admin':
             eliminar_nota(notas)
 
         elif seleccion == "0":
@@ -124,18 +121,36 @@ def agregar_nota(notas, estudiantes, materias):
 
 #----------------------------LISTAR NOTAS----------------------------
 
-def lista_nota(notas):
+def lista_nota(notas, estudiantes, materias):
 
     if len(notas) == 0:
         input("No hay notas")
         return
 
+    limpiar_pantalla()
+    print("=== LISTA DE NOTAS ===")
+    print()
     for n in notas:
-        print("ID:", n["id"])
-        print("Alumno:", n["id_estudiante"])
-        print("Materia:", n["id_materia"])
-        print("Nota:", n["nota"])
-        print("Tipo:", n["descripcion"])
+        # Buscar nombre del estudiante
+        nombre_alumno = str(n["id_estudiante"])  # Si no encuentra, muestra el ID
+        for e in estudiantes:
+            if e["legajo"] == n["id_estudiante"]:
+                nombre_alumno = e["nombre"]
+                break
+        
+        # Buscar nombre de la materia
+        nombre_materia = str(n["id_materia"])  # Si no encuentra, muestra el ID
+        for m in materias:
+            if m["id"] == n["id_materia"]:
+                nombre_materia = m["nombre"]
+                break
+        
+        print(f"ID: {n['id']}")
+        print(f"Alumno: {nombre_alumno}")
+        print(f"Materia: {nombre_materia}")
+        print(f"Nota: {n['nota']}")
+        print(f"Tipo: {n['descripcion']}")
+        print("-" * 30)
 
     input()
 
@@ -200,31 +215,3 @@ def eliminar_nota(notas):
     notas.pop(posicion)
 
     input("Nota eliminada correctamente")
-
-
-#----------------------------PROMEDIO----------------------------
-def promedio_nota(notas):
-
-    if len(notas) == 0:
-        input("No hay notas")
-        return
-
-    alumno_id = int(input("ID estudiante: "))
-    materia_id = int(input("ID materia: "))
-
-    suma = 0
-    contador = 0
-
-    for n in notas:
-        if n["id_estudiante"] == alumno_id and n["id_materia"] == materia_id:
-            suma += n["nota"]
-            contador += 1
-
-    if contador == 0:
-        input("No hay notas para ese alumno/materia")
-        return
-
-    promedio = suma / contador
-
-    print("Promedio:", promedio)
-    input()
