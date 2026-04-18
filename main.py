@@ -1,39 +1,25 @@
-﻿import re
-from pathlib import Path
-
-from funciones import limpiar_pantalla
+﻿from funciones import limpiar_pantalla, validar_email
 from estudiantes import cargar_estudiantes, menu_estudiantes
-from materias import menu_materias
-from notas import menu_notas
+from materias import cargar_materias, menu_materias
+from notas import cargar_notas, menu_notas
 
 #nivel de permiso que pueda ampliar todo y otro que pueda modificar
 #10 minutos 
 # 1 primer parcial 2 segundo, cuando se escribe que se imprima completo su nombre  
 # login minimo con 2 niveles de usuario 
 
-SCRIPT_DIR = Path(__file__).parent
-USERS_FILE = SCRIPT_DIR / 'users.txt'
+def cargar_usuarios():
+    return [
+        {'email': 'admin@uade.edu.ar', 'password': 'admin', 'rol': 'admin'},
+        {'email': 'guido@guido.com', 'password': '123', 'rol': 'viewer'},
+        {'email': 'uade@uade.com', 'password': '1234', 'rol': 'viewer'},
+        {'email': '1@gmail.com', 'password': '123456', 'rol': 'viewer'},
+        {'email': 'garrote@gmail.com', 'password': 'garrote', 'rol': 'viewer'}
+    ]
 
-
-def load_users():
-    users = []
-    try:
-        with open(USERS_FILE, 'r') as f:
-            for line in f:
-                if line.strip():
-                    email, password = line.strip().split(',')
-                    users.append({'email': email, 'password': password})
-    except FileNotFoundError:
-        pass
-    return users
-
-def save_users(users):
-    with open(USERS_FILE, 'w') as f:
-        for user in users:
-            f.write(f"{user['email']},{user['password']}\n")
 
 def login_menu():
-    users = load_users()
+    users = cargar_usuarios()
     while True:
         limpiar_pantalla()
         print("Sistema de Gestión Académica")
@@ -48,12 +34,12 @@ def login_menu():
                 if user['email'] == email and user['password'] == password:
                     print("Login exitoso")
                     input("Presione enter para continuar")
-                    return True
+                    return user['rol']
             print("Email o contraseña incorrectos")
             input("Presione enter para continuar")
         elif opcion == '2':
             email = input('Email: ')
-            if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
+            if not validar_email(email):
                 print("Email inválido")
                 input("Presione enter para continuar")
                 continue
@@ -68,25 +54,25 @@ def login_menu():
                 input("Presione enter para continuar")
                 continue
             users.append({'email': email, 'password': password})
-            save_users(users)
             print("Usuario creado exitosamente")
             input("Presione enter para continuar")
         elif opcion == '0':
-            return False
+            return None
         else:
             print("Opción inválida")
             input("Presione enter para continuar")
 
 # función principal del programa
 def main():
-    if not login_menu():
+    rol = login_menu()
+    if rol is None:
         return
 
     estudiantes = cargar_estudiantes()
-    materias = [[1, 'matematicas', True]]
-    notas = []
+    materias = cargar_materias()
+    notas = cargar_notas()
     # lista donde se guardan los estudiantes
-    # cada elemento será: [legajo, nombre, email]
+    # cada elemento será: {legajo, nombre, mail, estado}
 
 
     opcion = ""
@@ -107,22 +93,24 @@ def main():
 
         if opcion == '1':
 
-            menu_estudiantes(estudiantes)
+            menu_estudiantes(estudiantes, rol)
 
 
         elif opcion == '2':
 
-            menu_materias(materias)
+            menu_materias(materias, rol)
 
         elif opcion == '3':
 
-            menu_notas(notas, estudiantes, materias)
+            menu_notas(notas, estudiantes, materias, rol)
 
         elif opcion == '4':
 
-            print('opcion 4')
-            input()
-            #menu_estadisticas()
+            print('Estadisticas:')
+            print(f'Total estudiantes: {len([e for e in estudiantes if e["estado"]])}')
+            print(f'Total materias: {len([m for m in materias if m["estado"]])}')
+            print(f'Total notas: {len(notas)}')
+            input("Presione enter para continuar")
         
         elif opcion == '0':
 
@@ -132,11 +120,6 @@ def main():
 
             print('opcion invalida')
             input()
-            #menu estadisticas()
-
-        
-
-
 
 
 if __name__ == '__main__':
