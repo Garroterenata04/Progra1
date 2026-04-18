@@ -3,9 +3,9 @@ from funciones import limpiar_pantalla, validar_email, validar_no_vacio, validar
 
 def cargar_estudiantes():
     return [
-        {'legajo': 1, 'nombre': 'Juan Pérez', 'mail': 'juan@mail.com', 'estado': True},
-        {'legajo': 2, 'nombre': 'María Gómez', 'mail': 'maria@mail.com', 'estado': True},
-        {'legajo': 3, 'nombre': 'Lucía Fernández', 'mail': 'lucia@mail.com', 'estado': False},
+        {'legajo': 1, 'nombre': 'Juan Pérez', 'mail': 'juan@mail.com', 'activo': True},
+        {'legajo': 2, 'nombre': 'María Gómez', 'mail': 'maria@mail.com', 'activo': True},
+        {'legajo': 3, 'nombre': 'Lucía Fernández', 'mail': 'lucia@mail.com', 'activo': False},
     ]
 
 
@@ -14,7 +14,7 @@ def guardar_estudiantes(estudiantes):
     pass
 
 
-def listar_estudiantes_archivo(alumnos):
+def listar_estudiantes(alumnos):
     if len(alumnos) == 0:
         input("No hay estudiantes")
         return
@@ -23,10 +23,10 @@ def listar_estudiantes_archivo(alumnos):
     print("=== LISTA DE ESTUDIANTES ===")
     print()
     for alumno in alumnos:
-        if alumno['estado']:
             print(f"Legajo: {alumno['legajo']}")
             print(f"Nombre: {alumno['nombre']}")
             print(f"Mail: {alumno['mail']}")
+            print(f"Activo: {'Sí' if alumno['activo'] else 'No'}")
             print("-" * 30)
     
     input()
@@ -57,7 +57,7 @@ def agregar_estudiante(estudiantes):
         'legajo': nuevo_legajo,
         'nombre': nombre,
         'mail': mail,
-        'estado': True
+        'activo': True
     }
 
     estudiantes.append(nuevo_estudiante)
@@ -72,13 +72,13 @@ def mostrar_estudiantes(estudiantes):
         return
 
     for alumno in estudiantes:
-        if alumno['estado']:
+        if alumno['activo']:
             print(f"{alumno['legajo']} - {alumno['nombre']}")
 
     print()
 
 
-def buscar_pos_estudiante(estudiantes, legajo_buscado):
+def buscar_por_estudiante(estudiantes, legajo_buscado):
     for index, alumno in enumerate(estudiantes):
         if alumno['legajo'] == legajo_buscado:
             return index
@@ -92,7 +92,7 @@ def prueba_modificar_estudiante(estudiantes):
     mostrar_estudiantes(estudiantes)
 
     legajo_busqueda = validar_numero('Ingrese el legajo a modificar: ')
-    posicion = buscar_pos_estudiante(estudiantes, legajo_busqueda)
+    posicion = buscar_por_estudiante(estudiantes, legajo_busqueda)
 
     if posicion != -1:
         nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
@@ -124,14 +124,59 @@ def eliminar_estudiante(estudiantes):
     mostrar_estudiantes(estudiantes)
 
     legajo_buscar = validar_numero("Ingrese el legajo a eliminar: ")
-    posicion = buscar_pos_estudiante(estudiantes, legajo_buscar)
+    posicion = buscar_por_estudiante(estudiantes, legajo_buscar)
 
     if posicion != -1:
-        estudiantes[posicion]['estado'] = False
+        estudiantes[posicion]['activo'] = False
         guardar_estudiantes(estudiantes)
         input(f'El estudiante {estudiantes[posicion]["legajo"]} {estudiantes[posicion]["nombre"]} fue eliminado correctamente.')
     else:
         input(f'No se encontro un estudiante con el legajo: {legajo_buscar}')
+
+
+def listar_estudiantes_inactivos(estudiantes):
+    """Muestra lista detallada de estudiantes inactivos"""
+    inactivos = [alumno for alumno in estudiantes if not alumno['activo']]
+    
+    if len(inactivos) == 0:
+        input("No hay estudiantes inactivos")
+        return
+    
+    limpiar_pantalla()
+    print("=== LISTA DE ESTUDIANTES INACTIVOS ===")
+    print()
+    for alumno in inactivos:
+        print(f"Legajo: {alumno['legajo']}")
+        print(f"Nombre: {alumno['nombre']}")
+        print(f"Mail: {alumno['mail']}")
+        print("-" * 30)
+    
+    input()
+
+
+def reactivar_estudiante(estudiantes):
+    limpiar_pantalla()
+    print("=== REACTIVAR ESTUDIANTE ===")
+    print()
+    listar_estudiantes_inactivos(estudiantes)
+
+    inactivos = [alumno for alumno in estudiantes if not alumno['activo']]
+    
+    if len(inactivos) == 0:
+        return
+
+    legajo = validar_numero("Ingrese el legajo a reactivar: ")
+    posicion = buscar_por_estudiante(estudiantes, legajo)
+
+    if posicion != -1:
+        if estudiantes[posicion]['activo']:
+            input(f'El estudiante {estudiantes[posicion]["legajo"]} ya está activo.')
+        else:
+            estudiantes[posicion]['activo'] = True
+            guardar_estudiantes(estudiantes)
+            input(f'El estudiante {estudiantes[posicion]["legajo"]} {estudiantes[posicion]["nombre"]} fue reactivado correctamente.')
+    else:
+        input(f'No se encontro un estudiante con el legajo: {legajo}')
 
 
 def menu_estudiantes(estudiantes, rol):
@@ -147,6 +192,7 @@ def menu_estudiantes(estudiantes, rol):
             print("2. Modificacion de estudiante")
             print("3. Baja de estudiante")
             print("4. Lista de estudiantes")
+            print("5. Reactivar estudiante")
         else:  # viewer
             print("1. Lista de estudiantes")
         
@@ -159,7 +205,7 @@ def menu_estudiantes(estudiantes, rol):
 
         elif seleccion == '1' and rol == 'viewer':
             limpiar_pantalla()
-            listar_estudiantes_archivo(estudiantes)
+            listar_estudiantes(estudiantes)
             input()
 
         elif seleccion == '2' and rol == 'admin':
@@ -171,8 +217,11 @@ def menu_estudiantes(estudiantes, rol):
 
         elif seleccion == '4' and rol == 'admin':
             limpiar_pantalla()
-            listar_estudiantes_archivo(estudiantes)
+            listar_estudiantes(estudiantes)
             input()
+
+        elif seleccion == '5' and rol == 'admin':
+            reactivar_estudiante(estudiantes)
 
         elif seleccion == '0':
             print('Volviendo al menu anterior...')
