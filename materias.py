@@ -12,6 +12,9 @@ def cargar_materias():
 
 
 def agregar_materia(materias):
+    limpiar_pantalla()
+    print("=== ALTA DE MATERIA ===")
+    print()
     nueva_id = materias[-1]['id'] + 1 if materias else 1
     nombre = input('Ingrese el nombre de la materia: \n')
 
@@ -45,7 +48,10 @@ def menu_materias(materias, rol):
 
         seleccion = input('Opcion: ')
 
-        if (seleccion == '1' and rol == 'admin') or (seleccion == '1' and rol == 'viewer'):
+        if seleccion == '1' and rol == 'admin':
+            agregar_materia(materias)
+
+        elif seleccion == '1' and rol == 'viewer':
             limpiar_pantalla()
             print('Lista de materias:')
             for materia in materias:

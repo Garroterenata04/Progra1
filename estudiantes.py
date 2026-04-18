@@ -28,6 +28,9 @@ def listar_estudiantes_archivo(alumnos):
 
 
 def agregar_estudiante(estudiantes):
+    limpiar_pantalla()
+    print("=== ALTA DE ESTUDIANTE ===")
+    print()
     nombre = input('Ingrese el nombre del alumno: ')
     mail = input('Ingrese el mail: ')
     
@@ -72,6 +75,9 @@ def buscar_pos_estudiante(estudiantes, legajo_buscado):
 
 
 def prueba_modificar_estudiante(estudiantes):
+    limpiar_pantalla()
+    print("=== MODIFICACION DE ESTUDIANTE ===")
+    print()
     mostrar_estudiantes(estudiantes)
 
     legajo_busqueda = int(input('Ingrese el legajo a modificar: '))
@@ -97,6 +103,9 @@ def prueba_modificar_estudiante(estudiantes):
 
 
 def eliminar_estudiante(estudiantes):
+    limpiar_pantalla()
+    print("=== BAJA DE ESTUDIANTE ===")
+    print()
     mostrar_estudiantes(estudiantes)
 
     legajo_buscar = int(input("Ingrese el legajo a eliminar: "))
@@ -130,7 +139,10 @@ def menu_estudiantes(estudiantes, rol):
 
         seleccion = input('Opcion: ')
 
-        if (seleccion == '1' and rol == 'admin') or (seleccion == '1' and rol == 'viewer'):
+        if seleccion == '1' and rol == 'admin':
+            agregar_estudiante(estudiantes)
+
+        elif seleccion == '1' and rol == 'viewer':
             limpiar_pantalla()
             listar_estudiantes_archivo(estudiantes)
             input()

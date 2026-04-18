@@ -57,6 +57,9 @@ def menu_notas(notas, estudiantes, materias, rol):
 #----------------------------AGREGAR NOTA----------------------------
 
 def agregar_nota(notas, estudiantes, materias):
+    limpiar_pantalla()
+    print("=== ALTA DE NOTA ===")
+    print()
 
     if len(estudiantes) == 0:
         input("No hay estudiantes cargados")
@@ -158,6 +161,9 @@ def lista_nota(notas, estudiantes, materias):
 #----------------------------MODIFICAR NOTA----------------------------
 
 def modificar_nota(notas):
+    limpiar_pantalla()
+    print("=== MODIFICACION DE NOTA ===")
+    print()
 
     if len(notas) == 0:
         input("No hay notas")
@@ -190,6 +196,9 @@ def modificar_nota(notas):
 #----------------------------ELIMINAR NOTA----------------------------
 
 def eliminar_nota(notas):
+    limpiar_pantalla()
+    print("=== ELIMINACION DE NOTA ===")
+    print()
 
     if len(notas) == 0:
         input("No hay notas")
