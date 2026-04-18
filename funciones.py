@@ -23,7 +23,7 @@ def validar_numero(prompt):
     while True:
         entrada = input(prompt)
         if not validar_no_vacio(entrada):
-            print("Entrada no puede estar vacía")
+            print("Número inválido (no puede estar vacío)")
             continue
         try:
             return int(entrada)
