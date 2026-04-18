@@ -1,4 +1,4 @@
-from funciones import limpiar_pantalla
+from funciones import limpiar_pantalla, validar_numero
 
 
 #------- ESTADISTICAS GENERALES -------
@@ -48,7 +48,7 @@ def promedio_general_estudiantes(estudiantes, notas):
 
 def promedio_estudiante_materias(estudiantes, materias, notas):
     limpiar_pantalla()
-    legajo = int(input("Ingrese el legajo del estudiante: "))
+    legajo = validar_numero("Ingrese el legajo del estudiante: ")
     
     # Buscar estudiante
     estudiante = None
@@ -96,7 +96,7 @@ def promedio_materia(materias, notas):
             print(f"{m['id']} - {m['nombre']}")
     
     print()
-    materia_id = int(input("Ingrese el ID de la materia: "))
+    materia_id = validar_numero("Ingrese el ID de la materia: ")
     
     # Buscar materia
     materia = None

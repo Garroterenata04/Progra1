@@ -1,4 +1,4 @@
-from funciones import limpiar_pantalla, validar_email
+from funciones import limpiar_pantalla, validar_email, validar_no_vacio, validar_numero
 
 
 def cargar_estudiantes():
@@ -15,15 +15,20 @@ def guardar_estudiantes(estudiantes):
 
 
 def listar_estudiantes_archivo(alumnos):
-    print("\n===== LISTA DE ALUMNOS =====\n")
-
+    if len(alumnos) == 0:
+        input("No hay estudiantes")
+        return
+    
+    limpiar_pantalla()
+    print("=== LISTA DE ESTUDIANTES ===")
+    print()
     for alumno in alumnos:
-        print(f"Legajo : {alumno['legajo']}")
-        print(f"Nombre : {alumno['nombre']}")
-        print(f"Mail   : {alumno['mail']}")
-        print(f"Estado : {'Activo' if alumno['estado'] else 'Inactivo'}")
-        print("-" * 30)
-
+        if alumno['estado']:
+            print(f"Legajo: {alumno['legajo']}")
+            print(f"Nombre: {alumno['nombre']}")
+            print(f"Mail: {alumno['mail']}")
+            print("-" * 30)
+    
     input()
 
 
@@ -31,10 +36,15 @@ def agregar_estudiante(estudiantes):
     limpiar_pantalla()
     print("=== ALTA DE ESTUDIANTE ===")
     print()
+    
     nombre = input('Ingrese el nombre del alumno: ')
+    while not validar_no_vacio(nombre):
+        print("Nombre inválido (no puede estar vacío)")
+        nombre = input('Ingrese el nombre del alumno: ')
+    
     mail = input('Ingrese el mail: ')
     
-    while not validar_email(mail):
+    while not validar_email(mail) or not validar_no_vacio(mail):
         print("Email inválido")
         mail = input('Ingrese el mail: ')
 
@@ -62,7 +72,8 @@ def mostrar_estudiantes(estudiantes):
         return
 
     for alumno in estudiantes:
-        print(alumno['legajo'], alumno['nombre'])
+        if alumno['estado']:
+            print(f"{alumno['legajo']} - {alumno['nombre']}")
 
     print()
 
@@ -80,14 +91,18 @@ def prueba_modificar_estudiante(estudiantes):
     print()
     mostrar_estudiantes(estudiantes)
 
-    legajo_busqueda = int(input('Ingrese el legajo a modificar: '))
+    legajo_busqueda = validar_numero('Ingrese el legajo a modificar: ')
     posicion = buscar_pos_estudiante(estudiantes, legajo_busqueda)
 
     if posicion != -1:
         nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
+        while not validar_no_vacio(nuevo_nombre):
+            print("Nombre inválido (no puede estar vacío)")
+            nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
+        
         nuevo_mail = input("Ingrese el nuevo mail: ")
         
-        while not validar_email(nuevo_mail):
+        while not validar_email(nuevo_mail) or not validar_no_vacio(nuevo_mail):
             print("Email inválido")
             nuevo_mail = input("Ingrese el nuevo mail: ")
 
@@ -108,7 +123,7 @@ def eliminar_estudiante(estudiantes):
     print()
     mostrar_estudiantes(estudiantes)
 
-    legajo_buscar = int(input("Ingrese el legajo a eliminar: "))
+    legajo_buscar = validar_numero("Ingrese el legajo a eliminar: ")
     posicion = buscar_pos_estudiante(estudiantes, legajo_buscar)
 
     if posicion != -1:

@@ -1,4 +1,4 @@
-from funciones import limpiar_pantalla
+from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
 
 
 def cargar_materias():
@@ -17,6 +17,10 @@ def agregar_materia(materias):
     print()
     nueva_id = materias[-1]['id'] + 1 if materias else 1
     nombre = input('Ingrese el nombre de la materia: \n')
+    
+    while not validar_no_vacio(nombre):
+        print("Nombre inválido (no puede estar vacío)")
+        nombre = input('Ingrese el nombre de la materia: \n')
 
     materiaNueva = {
         'id': nueva_id,
@@ -24,8 +28,85 @@ def agregar_materia(materias):
         'estado': True
     }
 
-    input(f"Se agregó correctamente la materia: {materiaNueva} presione enter para continuar")
-    return materiaNueva
+    materias.append(materiaNueva)
+    input(f"Se agregó correctamente la materia: {materiaNueva['nombre']} presione enter para continuar")
+
+
+def mostrar_materias(materias):
+    """Muestra lista simple para selección"""
+    if len(materias) == 0:
+        print("No hay materias\n")
+        return
+
+    for materia in materias:
+        if materia['estado']:
+            print(f"{materia['id']} - {materia['nombre']}")
+
+    print()
+
+
+def listar_materias(materias):
+    """Muestra lista detallada de materias con header"""
+    if len(materias) == 0:
+        input("No hay materias")
+        return
+    
+    limpiar_pantalla()
+    print("=== LISTA DE MATERIAS ===")
+    print()
+    for materia in materias:
+        if materia['estado']:
+            print(f"ID: {materia['id']}")
+            print(f"Nombre: {materia['nombre']}")
+            print("-" * 30)
+    
+    input()
+
+
+def buscar_pos_materia(materias, id_buscado):
+    for index, materia in enumerate(materias):
+        if materia['id'] == id_buscado:
+            return index
+    return -1
+
+
+def modificar_materia(materias):
+    limpiar_pantalla()
+    print("=== MODIFICACION DE MATERIA ===")
+    print()
+    mostrar_materias(materias)
+
+    id_busqueda = validar_numero('Ingrese el ID de la materia a modificar: ')
+    posicion = buscar_pos_materia(materias, id_busqueda)
+
+    if posicion != -1:
+        nuevo_nombre = input("Ingrese el nuevo nombre de la materia: ")
+        while not validar_no_vacio(nuevo_nombre):
+            print("Nombre inválido (no puede estar vacío)")
+            nuevo_nombre = input("Ingrese el nuevo nombre de la materia: ")
+        materias[posicion]['nombre'] = nuevo_nombre
+
+        print(f"Materia modificada: {materias[posicion]}")
+        input()
+    else:
+        print("No existe una materia con ese ID.")
+        input()
+
+
+def eliminar_materia(materias):
+    limpiar_pantalla()
+    print("=== BAJA DE MATERIA ===")
+    print()
+    mostrar_materias(materias)
+
+    id_buscar = validar_numero("Ingrese el ID de la materia a eliminar: ")
+    posicion = buscar_pos_materia(materias, id_buscar)
+
+    if posicion != -1:
+        materias[posicion]['estado'] = False
+        input(f'La materia {materias[posicion]["id"]} {materias[posicion]["nombre"]} fue eliminada correctamente.')
+    else:
+        input(f'No se encontro una materia con el ID: {id_buscar}')
 
 
 def menu_materias(materias, rol):
@@ -52,24 +133,16 @@ def menu_materias(materias, rol):
             agregar_materia(materias)
 
         elif seleccion == '1' and rol == 'viewer':
-            limpiar_pantalla()
-            print('Lista de materias:')
-            for materia in materias:
-                print(materia)
-            input()
+            listar_materias(materias)
 
         elif seleccion == '2' and rol == 'admin':
-            input('Función de modificación aún no implementada. Presione enter para continuar.')
+            modificar_materia(materias)
 
         elif seleccion == '3' and rol == 'admin':
-            input('Función de baja aún no implementada. Presione enter para continuar.')
+            eliminar_materia(materias)
 
         elif seleccion == '4' and rol == 'admin':
-            limpiar_pantalla()
-            print('Lista de materias:')
-            for materia in materias:
-                print(materia)
-            input()
+            listar_materias(materias)
 
         elif seleccion == '0':
             print('Volviendo al menú anterior...')
