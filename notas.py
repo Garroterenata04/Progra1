@@ -1,14 +1,5 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota
-
-
-def cargar_notas():
-    return [
-        {"id": 1, "id_estudiante": 1, "id_materia": 1, "nota": 8, "descripcion": "Primer parcial"},
-        {"id": 2, "id_estudiante": 1, "id_materia": 2, "nota": 9, "descripcion": "Segundo parcial"},
-        {"id": 3, "id_estudiante": 2, "id_materia": 1, "nota": 7, "descripcion": "Primer parcial"},
-        {"id": 4, "id_estudiante": 2, "id_materia": 3, "nota": 10, "descripcion": "Final"},
-        {"id": 5, "id_estudiante": 3, "id_materia": 4, "nota": 6, "descripcion": "Primer parcial"}
-    ]
+from matrices import cargar_notas
 
 
 #----------------------------MENU NOTAS----------------------------

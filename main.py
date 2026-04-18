@@ -1,19 +1,10 @@
 ﻿import getpass
 from funciones import limpiar_pantalla, validar_email, validar_no_vacio
-from estudiantes import cargar_estudiantes, menu_estudiantes
-from materias import cargar_materias, menu_materias
-from notas import cargar_notas, menu_notas
+from matrices import cargar_estudiantes, cargar_materias, cargar_notas, cargar_usuarios
+from estudiantes import menu_estudiantes
+from materias import menu_materias
+from notas import menu_notas
 from estadisticas import mostrar_estadisticas
-
-
-def cargar_usuarios():
-    return [
-        {'email': 'admin@uade.edu.ar', 'password': 'admin', 'rol': 'admin'},
-        {'email': 'guido@guido.com', 'password': '123', 'rol': 'viewer'},
-        {'email': 'uade@uade.com', 'password': '1234', 'rol': 'viewer'},
-        {'email': '1@gmail.com', 'password': '123456', 'rol': 'viewer'},
-        {'email': 'garrote@gmail.com', 'password': 'garrote', 'rol': 'viewer'}
-    ]
 
 
 def login_menu():
@@ -88,8 +79,6 @@ def main():
     estudiantes = cargar_estudiantes()
     materias = cargar_materias()
     notas = cargar_notas()
-    # lista donde se guardan los estudiantes
-    # cada elemento será: {legajo, nombre, mail, activo}
 
 
     opcion = ""
