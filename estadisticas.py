@@ -1,4 +1,5 @@
 from funciones import limpiar_pantalla, validar_numero
+from functools import reduce
 
 
 #------- ESTADISTICAS GENERALES -------
@@ -16,7 +17,9 @@ def estadisticas_generales(estudiantes, materias, notas):
     print(f"Total notas registradas: {len(notas)}")
     
     if len(notas) > 0:
-        promedio_general = sum(n["nota"] for n in notas) / len(notas)
+        calificaciones = list(map(lambda n: n["nota"], notas))
+        total_notas = reduce(lambda acc, nota: acc + nota, calificaciones, 0)
+        promedio_general = total_notas / len(calificaciones)
         print(f"Promedio general de notas: {promedio_general:.2f}")
     
     input("Presione enter para continuar")
@@ -34,7 +37,8 @@ def promedio_general_estudiantes(estudiantes, notas):
     else:
         for estudiante in estudiantes:
             if estudiante["activo"]:
-                notas_alumno = [n["nota"] for n in notas if n["id_estudiante"] == estudiante["legajo"]]
+                notas_filtradas = [n for n in notas if n["id_estudiante"] == estudiante["legajo"]]
+                notas_alumno = list(map(lambda n: n["nota"], notas_filtradas))
                 if notas_alumno:
                     promedio = sum(notas_alumno) / len(notas_alumno)
                     print(f"{estudiante['nombre']} (Legajo {estudiante['legajo']}): {promedio:.2f}")
@@ -73,12 +77,14 @@ def promedio_estudiante_materias(estudiantes, materias, notas):
     else:
         for materia in materias:
             if materia["activo"]:
-                notas_materia = [n["nota"] for n in notas_alumno if n["id_materia"] == materia["id"]]
+                notas_filtradas = [n for n in notas_alumno if n["id_materia"] == materia["id"]]
+                notas_materia = list(map(lambda n: n["nota"], notas_filtradas))
                 if notas_materia:
                     promedio = sum(notas_materia) / len(notas_materia)
                     print(f"{materia['nombre']}: {promedio:.2f}")
         
-        promedio_total = sum(n["nota"] for n in notas_alumno) / len(notas_alumno)
+        calificaciones_total = list(map(lambda n: n["nota"], notas_alumno))
+        promedio_total = sum(calificaciones_total) / len(calificaciones_total)
         print(f"\nPromedio total: {promedio_total:.2f}")
     
     input("Presione enter para continuar")
@@ -119,7 +125,9 @@ def promedio_materia(materias, notas):
     if not notas_materia:
         print(f"No hay notas para {materia['nombre']}")
     else:
-        promedio = sum(n["nota"] for n in notas_materia) / len(notas_materia)
+        calificaciones = list(map(lambda n: n["nota"], notas_materia))
+        total_notas = reduce(lambda acc, nota: acc + nota, calificaciones, 0)
+        promedio = total_notas / len(calificaciones)
         print(f"Promedio general: {promedio:.2f}")
         print(f"Total notas: {len(notas_materia)}")
     
@@ -144,8 +152,9 @@ def mejor_estudiante(estudiantes, notas):
             promedios[n["id_estudiante"]].append(n["nota"])
         
         # Calcular el mejor promedio
-        mejor_legajo = max(promedios, key=lambda x: sum(promedios[x]) / len(promedios[x]))
-        mejor_promedio = sum(promedios[mejor_legajo]) / len(promedios[mejor_legajo])
+        mejor_legajo = max(promedios, key=lambda x: reduce(lambda acc, nota: acc + nota, promedios[x], 0) / len(promedios[x]))
+        suma_notas = reduce(lambda acc, nota: acc + nota, promedios[mejor_legajo], 0)
+        mejor_promedio = suma_notas / len(promedios[mejor_legajo])
         
         # Mostrar resultado
         for e in estudiantes:
