@@ -1,5 +1,4 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
-from matrices import cargar_materias
 
 
 def agregar_materia(materias):
