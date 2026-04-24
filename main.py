@@ -126,7 +126,6 @@ def main():
 
             menu_estudiantes(estudiantes, rol)
 
-
         elif opcion == '2':
 
             menu_materias(materias, rol)
