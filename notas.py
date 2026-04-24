@@ -1,5 +1,4 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota
-from matrices import cargar_notas
 
 
 #----------------------------MENU NOTAS----------------------------
