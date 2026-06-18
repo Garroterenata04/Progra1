@@ -5,15 +5,10 @@ from estudiantes import menu_estudiantes
 from materias import menu_materias
 from notas import menu_notas
 from estadisticas import mostrar_estadisticas
+titulo = """    
 
-
-def login_menu():
-    users = cargar_usuarios()
-    while True:
-        limpiar_pantalla()
-        print("""
-   ____           _   _                             
-  / ___| ___  ___| |_(_) ___  _ __                  
+   ____           _   _   __                        
+  / ___| ___  ___| |_(_) /_/  _ __                  
  | |  _ / _ \/ __| __| |/ _ \| '_ \                 
  | |_| |  __/\__ \ |_| | (_) | | | |                
   \____|\___||___/\__|_|\___/|_| |_|    _           
@@ -21,8 +16,16 @@ def login_menu():
    / _ \ / __/ _` |/ _` |/ _ \ '_ ` _ \| |/ __/ _` |
   / ___ \ (_| (_| | (_| |  __/ | | | | | | (_| (_| |
  /_/   \_\___\__,_|\__,_|\___|_| |_| |_|_|\___\__,_|
-                                                    
-""")
+                                                          
+        """
+
+
+
+def login_menu():
+    users = cargar_usuarios()
+    while True:
+        limpiar_pantalla()
+        print(titulo)
         print("=== SISTEMA DE GESTIÓN ACADÉMICA ===")
         print()
         print("1 - Iniciar sesión")
@@ -102,18 +105,7 @@ def main():
         limpiar_pantalla()
         print("=== MENU PRINCIPAL ===")
         print()
-        print("""
-   ____           _   _                             
-  / ___| ___  ___| |_(_) ___  _ __                  
- | |  _ / _ \/ __| __| |/ _ \| '_ \                 
- | |_| |  __/\__ \ |_| | (_) | | | |                
-  \____|\___||___/\__|_|\___/|_| |_|    _           
-    / \   ___ __ _  __| | ___ _ __ ___ (_) ___ __ _ 
-   / _ \ / __/ _` |/ _` |/ _ \ '_ ` _ \| |/ __/ _` |
-  / ___ \ (_| (_| | (_| |  __/ | | | | | | (_| (_| |
- /_/   \_\___\__,_|\__,_|\___|_| |_| |_|_|\___\__,_|
-                                                    
-""")
+        print(titulo)
         print("1 - Menu estudiantes")
         print("2 - Menu materias")
         print("3 - Menu notas")
