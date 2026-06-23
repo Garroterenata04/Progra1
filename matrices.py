@@ -2,7 +2,16 @@
 # MÓDULO DE MATRICES - BASE DE DATOS
 #========================================
 # Centraliza todas las matrices (listas de diccionarios) del sistema.
-# Cada matriz representa una tabla de la base de datos en memoria.
+# La persistencia se hace en archivos de texto plano, un archivo por entidad,
+# con los campos de cada diccionario separados por ';'.
+#
+# estudiantes.txt -> legajo;nombre;mail;activo
+# materias.txt    -> id;nombre;activo
+# notas.txt       -> id;id_estudiante;id_materia;nota;descripcion
+
+ESTUDIANTES_FILE = "estudiantes.txt"
+MATERIAS_FILE = "materias.txt"
+NOTAS_FILE = "notas.txt"
 
 
 #========================================
