@@ -1,3 +1,5 @@
+import os
+
 #========================================
 # MÓDULO DE MATRICES - BASE DE DATOS
 #========================================
@@ -25,12 +27,21 @@ def guardar_estudiantes(estudiantes):
 
 
 def cargar_estudiantes():
-    """Matriz de estudiantes - módulo estudiantes.py"""
-    return [
-        {'legajo': 1, 'nombre': 'Juan Pérez', 'mail': 'juan@mail.com', 'activo': True},
-        {'legajo': 2, 'nombre': 'María Gómez', 'mail': 'maria@mail.com', 'activo': True},
-        {'legajo': 3, 'nombre': 'Lucía Fernández', 'mail': 'lucia@mail.com', 'activo': False},
-    ]
+    """Lee la lista de estudiantes desde estudiantes.txt"""
+    if not os.path.exists(ESTUDIANTES_FILE):
+        return []
+
+    estudiantes = []
+    with open(ESTUDIANTES_FILE, 'r', encoding='utf-8') as archivo:
+        for linea in archivo:
+            legajo, nombre, mail, activo = linea.strip().split(';')
+            estudiantes.append({
+                'legajo': int(legajo),
+                'nombre': nombre,
+                'mail': mail,
+                'activo': activo == 'True'
+            })
+    return estudiantes
 
 
 #========================================
@@ -44,14 +55,20 @@ def guardar_materias(materias):
 
 
 def cargar_materias():
-    """Matriz de materias - módulo materias.py"""
-    return [
-        {"id": 1, "nombre": "Matematicas", "activo": True},
-        {"id": 2, "nombre": "Fisica", "activo": True},
-        {"id": 3, "nombre": "Quimica", "activo": True},
-        {"id": 4, "nombre": "Programacion", "activo": True},
-        {"id": 5, "nombre": "Ingles", "activo": True}
-    ]
+    """Lee la lista de materias desde materias.txt"""
+    if not os.path.exists(MATERIAS_FILE):
+        return []
+
+    materias = []
+    with open(MATERIAS_FILE, 'r', encoding='utf-8') as archivo:
+        for linea in archivo:
+            id_materia, nombre, activo = linea.strip().split(';')
+            materias.append({
+                'id': int(id_materia),
+                'nombre': nombre,
+                'activo': activo == 'True'
+            })
+    return materias
 
 
 #========================================
@@ -65,14 +82,22 @@ def guardar_notas(notas):
 
 
 def cargar_notas():
-    """Matriz de notas - módulo notas.py"""
-    return [
-        {"id": 1, "id_estudiante": 1, "id_materia": 1, "nota": 8, "descripcion": "Primer parcial"},
-        {"id": 2, "id_estudiante": 1, "id_materia": 2, "nota": 9, "descripcion": "Segundo parcial"},
-        {"id": 3, "id_estudiante": 2, "id_materia": 1, "nota": 7, "descripcion": "Primer parcial"},
-        {"id": 4, "id_estudiante": 2, "id_materia": 3, "nota": 10, "descripcion": "Final"},
-        {"id": 5, "id_estudiante": 3, "id_materia": 4, "nota": 6, "descripcion": "Primer parcial"}
-    ]
+    """Lee la lista de notas desde notas.txt"""
+    if not os.path.exists(NOTAS_FILE):
+        return []
+
+    notas = []
+    with open(NOTAS_FILE, 'r', encoding='utf-8') as archivo:
+        for linea in archivo:
+            id_nota, id_estudiante, id_materia, nota, descripcion = linea.strip().split(';')
+            notas.append({
+                'id': int(id_nota),
+                'id_estudiante': int(id_estudiante),
+                'id_materia': int(id_materia),
+                'nota': float(nota),
+                'descripcion': descripcion
+            })
+    return notas
 
 
 #========================================
