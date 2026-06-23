@@ -17,6 +17,13 @@ NOTAS_FILE = "notas.txt"
 #========================================
 # MATRIZ: ESTUDIANTES
 #========================================
+def guardar_estudiantes(estudiantes):
+    """Escribe la lista de estudiantes en estudiantes.txt"""
+    with open(ESTUDIANTES_FILE, 'w', encoding='utf-8') as archivo:
+        for e in estudiantes:
+            archivo.write(f"{e['legajo']};{e['nombre']};{e['mail']};{e['activo']}\n")
+
+
 def cargar_estudiantes():
     """Matriz de estudiantes - módulo estudiantes.py"""
     return [
@@ -29,6 +36,13 @@ def cargar_estudiantes():
 #========================================
 # MATRIZ: MATERIAS
 #========================================
+def guardar_materias(materias):
+    """Escribe la lista de materias en materias.txt"""
+    with open(MATERIAS_FILE, 'w', encoding='utf-8') as archivo:
+        for m in materias:
+            archivo.write(f"{m['id']};{m['nombre']};{m['activo']}\n")
+
+
 def cargar_materias():
     """Matriz de materias - módulo materias.py"""
     return [
@@ -43,6 +57,13 @@ def cargar_materias():
 #========================================
 # MATRIZ: NOTAS
 #========================================
+def guardar_notas(notas):
+    """Escribe la lista de notas en notas.txt"""
+    with open(NOTAS_FILE, 'w', encoding='utf-8') as archivo:
+        for n in notas:
+            archivo.write(f"{n['id']};{n['id_estudiante']};{n['id_materia']};{n['nota']};{n['descripcion']}\n")
+
+
 def cargar_notas():
     """Matriz de notas - módulo notas.py"""
     return [

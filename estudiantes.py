@@ -1,9 +1,5 @@
 from funciones import limpiar_pantalla, validar_email, validar_no_vacio, validar_numero
-
-
-def guardar_estudiantes(estudiantes):
-    # Los datos se mantienen en memoria durante la ejecución del programa.
-    pass
+from matrices import guardar_estudiantes
 
 
 def listar_estudiantes(alumnos):
