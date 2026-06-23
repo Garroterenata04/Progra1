@@ -87,14 +87,13 @@ def login_menu():
 
 # función principal del programa
 def main():
-    rol = login_menu()
-    if rol is None:
-        return
-
     estudiantes = cargar_estudiantes()
     materias = cargar_materias()
     notas = cargar_notas()
 
+    rol = login_menu()
+    if rol is None:
+        return
 
     opcion = ""
 
