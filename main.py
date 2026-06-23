@@ -143,7 +143,7 @@ def main():
 
         elif opcion == '4':
 
-            mostrar_estadisticas(estudiantes, materias, notas)
+            mostrar_estadisticas()
 
         elif opcion == '0':
 
