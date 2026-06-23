@@ -1,4 +1,5 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
+from matrices import guardar_materias
 
 
 def agregar_materia(materias):
@@ -19,6 +20,7 @@ def agregar_materia(materias):
     }
 
     materias.append(materiaNueva)
+    guardar_materias(materias)
     input(f"Se agregó correctamente la materia: {materiaNueva['nombre']} presione enter para continuar")
 
 
@@ -75,6 +77,7 @@ def modificar_materia(materias):
             print("Nombre inválido (no puede estar vacío)")
             nuevo_nombre = input("Ingrese el nuevo nombre de la materia: ")
         materias[posicion]['nombre'] = nuevo_nombre
+        guardar_materias(materias)
 
         print(f"Materia modificada: {materias[posicion]}")
         input()
@@ -94,6 +97,7 @@ def eliminar_materia(materias):
 
     if posicion != -1:
         materias[posicion]['activo'] = False
+        guardar_materias(materias)
         input(f'La materia {materias[posicion]["id"]} {materias[posicion]["nombre"]} fue eliminada correctamente.')
     else:
         input(f'No se encontro una materia con el ID: {id_buscar}')
