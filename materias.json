@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "nombre": "Matematicas",
+    "activo": true
+  },
+  {
+    "id": 2,
+    "nombre": "Fisica",
+    "activo": true
+  },
+  {
+    "id": 3,
+    "nombre": "Quimica",
+    "activo": true
+  },
+  {
+    "id": 4,
+    "nombre": "Programacion",
+    "activo": true
+  },
+  {
+    "id": 5,
+    "nombre": "Ingles",
+    "activo": true
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "id_estudiante": 1,
+    "id_materia": 1,
+    "nota": 8.0,
+    "descripcion": "Primer parcial"
+  },
+  {
+    "id": 2,
+    "id_estudiante": 1,
+    "id_materia": 2,
+    "nota": 9.0,
+    "descripcion": "Segundo parcial"
+  },
+  {
+    "id": 3,
+    "id_estudiante": 2,
+    "id_materia": 1,
+    "nota": 7.0,
+    "descripcion": "Primer parcial"
+  },
+  {
+    "id": 4,
+    "id_estudiante": 2,
+    "id_materia": 3,
+    "nota": 10.0,
+    "descripcion": "Final"
+  },
+  {
+    "id": 5,
+    "id_estudiante": 3,
+    "id_materia": 4,
+    "nota": 6.0,
+    "descripcion": "Primer parcial"
+  }
+]
