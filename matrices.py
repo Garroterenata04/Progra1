@@ -25,6 +25,10 @@ NOTAS_JSON_FILE = "notas.json"
 
 def guardar_json(nombre_archivo, datos):
     """Escribe una lista de diccionarios en un archivo JSON"""
+    # json.dump serializa la lista de diccionarios directamente al archivo.
+    # indent=2 -> lo deja prolijo (con sangría) para poder leerlo a simple vista.
+    # ensure_ascii=False -> permite guardar tildes/ñ como caracteres normales
+    # en vez de escaparlos (ej: "Pérez" en vez de "Pérez").
     with open(nombre_archivo, 'w', encoding='utf-8') as archivo:
         json.dump(datos, archivo, indent=2, ensure_ascii=False)
 
@@ -35,6 +39,8 @@ def cargar_json(nombre_archivo):
         return None
 
     with open(nombre_archivo, 'r', encoding='utf-8') as archivo:
+        # json.load reconstruye directamente la lista de diccionarios,
+        # respetando los tipos originales (int, float, bool, str).
         return json.load(archivo)
 
 
@@ -45,12 +51,16 @@ def guardar_estudiantes(estudiantes):
     """Escribe la lista de estudiantes en estudiantes.txt y estudiantes.json"""
     with open(ESTUDIANTES_FILE, 'w', encoding='utf-8') as archivo:
         for e in estudiantes:
+            # Una línea de texto por estudiante, campos separados por ';'.
             archivo.write(f"{e['legajo']};{e['nombre']};{e['mail']};{e['activo']}\n")
+    # Se guarda también en JSON para tener ambos formatos sincronizados.
     guardar_json(ESTUDIANTES_JSON_FILE, estudiantes)
 
 
 def cargar_estudiantes():
     """Lee la lista de estudiantes desde estudiantes.json si existe, sino desde estudiantes.txt"""
+    # El JSON tiene prioridad porque conserva los tipos de datos tal cual
+    # (bool, int) sin tener que parsearlos a mano como en el .txt.
     desde_json = cargar_json(ESTUDIANTES_JSON_FILE)
     if desde_json is not None:
         return desde_json
@@ -61,12 +71,13 @@ def cargar_estudiantes():
     estudiantes = []
     with open(ESTUDIANTES_FILE, 'r', encoding='utf-8') as archivo:
         for linea in archivo:
+            # strip() sacar el salto de línea final; split(';') separa los campos.
             legajo, nombre, mail, activo = linea.strip().split(';')
             estudiantes.append({
-                'legajo': int(legajo),
+                'legajo': int(legajo),          # en el txt todo es texto, hay que convertir a int
                 'nombre': nombre,
                 'mail': mail,
-                'activo': activo == 'True'
+                'activo': activo == 'True'      # el texto "True"/"False" se convierte a bool
             })
     return estudiantes
 
@@ -131,7 +142,7 @@ def cargar_notas():
                 'id': int(id_nota),
                 'id_estudiante': int(id_estudiante),
                 'id_materia': int(id_materia),
-                'nota': float(nota),
+                'nota': float(nota),            # la nota puede tener decimales (ej: 8.5)
                 'descripcion': descripcion
             })
     return notas
@@ -142,6 +153,8 @@ def cargar_notas():
 #========================================
 def cargar_usuarios():
     """Matriz de usuarios - módulo main.py"""
+    # Los usuarios (login) no persisten en archivo: viven solo en memoria
+    # durante la ejecución, por eso siempre se devuelve esta lista fija.
     return [
         {'email': 'admin@uade.edu.ar', 'password': 'admin', 'rol': 'admin'},
         {'email': 'guido@guido.com', 'password': '123', 'rol': 'viewer'},
