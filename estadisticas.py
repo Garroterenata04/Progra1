@@ -1,5 +1,6 @@
 from funciones import limpiar_pantalla, validar_numero
 from functools import reduce
+from matrices import cargar_json, ESTUDIANTES_JSON_FILE, MATERIAS_JSON_FILE, NOTAS_JSON_FILE
 
 # Módulo de reportes/estadísticas sobre estudiantes, materias y notas.
 # Usa programación funcional (map, filter, reduce, lambdas) en vez de
@@ -148,6 +149,40 @@ def promedio_materia(materias, notas):
     input("Presione enter para continuar")
 
 
+#------- PROMEDIO GENERAL DE MATERIAS -------
+
+def promedio_general_materias(materias, notas):
+    limpiar_pantalla()
+    print("=== PROMEDIO GENERAL DE MATERIAS ===")
+    print()
+
+    materias_activas = [m for m in materias if m["activo"]]
+
+    if not materias_activas or not notas:
+        print("No hay datos suficientes para calcular promedios")
+        input("Presione enter para continuar")
+        return
+
+    promedios = {}
+    for materia in materias_activas:
+        notas_materia = [n["nota"] for n in notas if n["id_materia"] == materia["id"]]
+        if notas_materia:
+            promedios[materia["id"]] = (materia["nombre"], sum(notas_materia) / len(notas_materia))
+
+    if not promedios:
+        print("No hay notas registradas para ninguna materia")
+        input("Presione enter para continuar")
+        return
+
+    mejor_id = max(promedios, key=lambda x: promedios[x][1])
+    peor_id = min(promedios, key=lambda x: promedios[x][1])
+
+    print(f"Materia con mejor promedio: {promedios[mejor_id][0]} ({promedios[mejor_id][1]:.2f})")
+    print(f"Materia con peor promedio:  {promedios[peor_id][0]} ({promedios[peor_id][1]:.2f})")
+
+    input("\nPresione enter para continuar")
+
+
 #------- MEJOR ESTUDIANTE -------
 
 def mejor_estudiante(estudiantes, notas):
@@ -218,10 +253,16 @@ def peor_estudiante(estudiantes, notas):
 
 #------- MENU PRINCIPAL ESTADISTICAS -------
 
-def mostrar_estadisticas(estudiantes, materias, notas):
+def mostrar_estadisticas():
     # Submenú de estadísticas: no distingue por rol, cualquier usuario
     # logueado puede ver todos los reportes (son de solo lectura).
+    # A diferencia de los otros menús, recarga los datos desde el .json en
+    # cada vuelta del while, para reflejar cambios hechos en otros menús.
     while True:
+        estudiantes = cargar_json(ESTUDIANTES_JSON_FILE) or []
+        materias = cargar_json(MATERIAS_JSON_FILE) or []
+        notas = cargar_json(NOTAS_JSON_FILE) or []
+
         limpiar_pantalla()
         print("=== ESTADISTICAS ===")
         print()
@@ -229,8 +270,9 @@ def mostrar_estadisticas(estudiantes, materias, notas):
         print("2 - Promedio general de estudiantes")
         print("3 - Promedio de un estudiante en todas las materias")
         print("4 - Promedio de una materia")
-        print("5 - Mejor estudiante")
-        print("6 - Peor estudiante")
+        print("5 - Promedio general de materias")
+        print("6 - Mejor estudiante")
+        print("7 - Peor estudiante")
         print("0 - Volver")
         print()
 
@@ -249,9 +291,12 @@ def mostrar_estadisticas(estudiantes, materias, notas):
             promedio_materia(materias, notas)
 
         elif opcion == '5':
-            mejor_estudiante(estudiantes, notas)
+            promedio_general_materias(materias, notas)
 
         elif opcion == '6':
+            mejor_estudiante(estudiantes, notas)
+
+        elif opcion == '7':
             peor_estudiante(estudiantes, notas)
 
         elif opcion == '0':
