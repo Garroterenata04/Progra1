@@ -1,4 +1,5 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota
+from matrices import guardar_notas
 
 
 #----------------------------MENU NOTAS----------------------------
@@ -128,6 +129,7 @@ def agregar_nota(notas, estudiantes, materias):
         "nota": nota,
         "descripcion": tipo
     })
+    guardar_notas(notas)
 
     input("Nota cargada correctamente")
 
@@ -199,6 +201,7 @@ def modificar_nota(notas):
 
     nueva = validar_nota("Nueva nota (0-10): ")
     notas[posicion]["nota"] = nueva
+    guardar_notas(notas)
 
     input("Nota modificada")
 
@@ -232,5 +235,6 @@ def eliminar_nota(notas):
         return
 
     notas.pop(posicion)
+    guardar_notas(notas)
 
     input("Nota eliminada correctamente")
