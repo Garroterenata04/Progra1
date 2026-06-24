@@ -47,10 +47,10 @@ def menu_notas(notas, estudiantes, materias, rol):
             eliminar_nota(notas)
 
         elif seleccion == "0":
-            input("Volviendo...")
+            input("[✓] Volviendo...")
 
         else:
-            input("Opcion invalida")
+            input("[x] Opcion invalida")
 
 
 #----------------------------AGREGAR NOTA----------------------------
@@ -62,11 +62,11 @@ def agregar_nota(notas, estudiantes, materias):
 
     # Sin estudiantes o materias cargadas no hay nada para relacionar.
     if len(estudiantes) == 0:
-        input("No hay estudiantes cargados")
+        input("[x] No hay estudiantes cargados")
         return
 
     if len(materias) == 0:
-        input("No hay materias cargadas")
+        input("[x] No hay materias cargadas")
         return
 
     # El id de la nota se autogenera igual que en estudiantes/materias.
@@ -92,7 +92,7 @@ def agregar_nota(notas, estudiantes, materias):
     # Validar que el estudiante exista y esté activo
     estudiante_existe = any(e['legajo'] == alumno_id and e['activo'] for e in estudiantes)
     if not estudiante_existe:
-        input("El estudiante no existe o está inactivo")
+        input("[x] El estudiante no existe o está inactivo")
         return
 
     materia_id = validar_numero("Ingrese el ID de la materia: ")
@@ -100,7 +100,7 @@ def agregar_nota(notas, estudiantes, materias):
     # Validar que la materia exista y esté activa
     materia_existe = any(m['id'] == materia_id and m['activo'] for m in materias)
     if not materia_existe:
-        input("La materia no existe o está inactiva")
+        input("[x] La materia no existe o está inactiva")
         return
 
     nota = validar_nota("Ingrese la nota (0-10): ")
@@ -113,7 +113,7 @@ def agregar_nota(notas, estudiantes, materias):
     opcion = input("Seleccione: ")
 
     while not validar_no_vacio(opcion):
-        print("Opción inválida (no puede estar vacía)")
+        print("[x] Opción inválida (no puede estar vacía)")
         opcion = input("Seleccione: ")
 
     if opcion == "1":
@@ -133,7 +133,7 @@ def agregar_nota(notas, estudiantes, materias):
                                and n["descripcion"] == tipo, notas))
 
     if existe: #lambda, filter
-        input("Esa nota ya existe para este alumno")
+        input("[✓] Esa nota ya existe para este alumno")
         return
 
     notas.append({#diccionarios y para que el acceso sea mas claro
@@ -145,7 +145,7 @@ def agregar_nota(notas, estudiantes, materias):
     })
     guardar_notas(notas)  # persiste el cambio en .txt y .json
 
-    input("Nota cargada correctamente")
+    input("[✓] Nota cargada correctamente")
 
 
 #----------------------------LISTAR NOTAS----------------------------
@@ -194,7 +194,7 @@ def modificar_nota(notas):
     print()
 
     if len(notas) == 0:
-        input("No hay notas")
+        input(" [x] No hay notas")
         return
 
     for n in notas:
@@ -214,7 +214,7 @@ def modificar_nota(notas):
             break
 
     if posicion == -1:
-        input("No se encontro la nota")
+        input("[x] No se encontro la nota")
         return
 
     nueva = validar_nota("Nueva nota (0-10): ")
@@ -234,7 +234,7 @@ def eliminar_nota(notas):
     print()
 
     if len(notas) == 0:
-        input("No hay notas")
+        input("[x] No hay notas")
         return
 
     for n in notas:
@@ -251,7 +251,7 @@ def eliminar_nota(notas):
             break
 
     if posicion == -1:
-        input("No se encontro la nota")
+        input("[x] No se encontro la nota")
         return
 
     notas.pop(posicion)

@@ -15,7 +15,7 @@ def agregar_materia(materias):
     nombre = input('Ingrese el nombre de la materia: \n')
 
     while not validar_no_vacio(nombre):
-        print("Nombre inválido (no puede estar vacío)")
+        print(" [x] Nombre inválido (no puede estar vacío)")
         nombre = input('Ingrese el nombre de la materia: \n')
 
     materiaNueva = {
@@ -26,7 +26,7 @@ def agregar_materia(materias):
 
     materias.append(materiaNueva)
     guardar_materias(materias)  # persiste el cambio en .txt y .json
-    input(f"Se agregó correctamente la materia: {materiaNueva['nombre']} presione enter para continuar")
+    input(f"[✓] Se agregó correctamente la materia: {materiaNueva['nombre']} presione enter para continuar")
 
 
 def mostrar_materias(materias):
@@ -34,7 +34,7 @@ def mostrar_materias(materias):
     # Listado resumido (id y nombre), usado como ayuda visual antes de pedir
     # un id para modificar/eliminar.
     if len(materias) == 0:
-        print("No hay materias\n")
+        print("[x] No hay materias\n")
         return
 
     for materia in materias:
@@ -47,18 +47,22 @@ def mostrar_materias(materias):
 def listar_materias(materias):
     """Muestra lista detallada de materias con header"""
     if len(materias) == 0:
-        input("No hay materias")
+        input("[x] No hay materias")
         return
 
     limpiar_pantalla()
     print("=== LISTA DE MATERIAS ===")
     print()
+
+    print(f"{'ID':<5}{'NOMBRE':<20}{'ACTIVO':<10}")
+    print("-" * 35)
+
     for materia in materias:
         print(f"ID: {materia['id']}")
         print(f"Nombre: {materia['nombre']}")
         print(f"Activo: {'Sí' if materia['activo'] else 'No'}")
         print("-" * 30)
-
+    
     input()
 
 
@@ -83,7 +87,7 @@ def modificar_materia(materias):
     if posicion != -1:
         nuevo_nombre = input("Ingrese el nuevo nombre de la materia: ")
         while not validar_no_vacio(nuevo_nombre):
-            print("Nombre inválido (no puede estar vacío)")
+            print("[x] Nombre inválido (no puede estar vacío)")
             nuevo_nombre = input("Ingrese el nuevo nombre de la materia: ")
         materias[posicion]['nombre'] = nuevo_nombre
         guardar_materias(materias)
@@ -91,7 +95,7 @@ def modificar_materia(materias):
         print(f"Materia modificada: {materias[posicion]}")
         input()
     else:
-        print("No existe una materia con ese ID.")
+        print(" [x] No existe una materia con ese ID.")
         input()
 
 
@@ -108,10 +112,9 @@ def eliminar_materia(materias):
 
     if posicion != -1:
         materias[posicion]['activo'] = False
-        guardar_materias(materias)
         input(f'La materia {materias[posicion]["id"]} {materias[posicion]["nombre"]} fue eliminada correctamente.')
     else:
-        input(f'No se encontro una materia con el ID: {id_buscar}')
+        input(f'[x] No se encontro una materia con el ID: {id_buscar}')
 
 
 def menu_materias(materias, rol):
@@ -154,8 +157,8 @@ def menu_materias(materias, rol):
             listar_materias(materias)
 
         elif seleccion == '0':
-            print('Volviendo al menú anterior...')
+            print('[✓] Volviendo al menú anterior...')
             input()
 
         else:
-            input('Opcion invalida. Presione enter para continuar.')
+            input('[x] Opcion invalida. Presione enter para continuar.')

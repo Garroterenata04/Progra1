@@ -51,17 +51,17 @@ def login_menu():
             # Se busca un usuario cuyo email y password coincidan exactamente.
             for user in users:
                 if user['email'] == email and user['password'] == password:
-                    print("Login exitoso")
+                    print("[✓] Login exitoso")
                     input("Presione enter para continuar")
                     return user['rol']
-            print("Email o contraseña incorrectos")
+            print(" [x] Email o contraseña incorrectos")
             input("Presione enter para continuar")
         elif opcion == '2':
             # Alta de usuario nuevo. Los usuarios creados acá siempre quedan
             # con rol 'viewer' (no se puede crear un admin desde este menú).
             email = input('Email: ')
             while not validar_no_vacio(email):
-                print("Email no puede estar vacío")
+                print(" [x] Email no puede estar vacío")
                 email = input('Email: ')
 
             if not validar_email(email):
@@ -74,7 +74,7 @@ def login_menu():
                 continue
             password = getpass.getpass('Contraseña: ')
             while not validar_no_vacio(password):
-                print("Contraseña no puede estar vacía")
+                print(" [x] Contraseña no puede estar vacía")
                 password = getpass.getpass('Contraseña: ')
 
             confirm = getpass.getpass('Confirmar contraseña: ')
@@ -82,18 +82,18 @@ def login_menu():
                 print("Confirmar contraseña no puede estar vacío")
                 confirm = getpass.getpass('Confirmar contraseña: ')
             if password != confirm:
-                print("Contraseñas no coinciden")
+                print(" [x] Contraseñas no coinciden")
                 input("Presione enter para continuar")
                 continue
             # Nota: como cargar_usuarios() no persiste en archivo, este
             # usuario nuevo solo existe mientras el programa siga corriendo.
             users.append({'email': email, 'password': password, 'rol': 'viewer'})
-            print("Usuario creado exitosamente")
+            print(" [✓] Usuario creado exitosamente")
             input("Presione enter para continuar")
         elif opcion == '0':
             return None
         else:
-            print("Opción inválida")
+            print(" [x] Opción inválida")
             input("Presione enter para continuar")
 
 # función principal del programa
@@ -151,7 +151,7 @@ def main():
 
         else:
 
-            print('opcion invalida')
+            print('[x] opcion invalida')
             input()
 
 
