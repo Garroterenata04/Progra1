@@ -42,7 +42,7 @@ def promedio_general_estudiantes(estudiantes, notas):
     print()
 
     if len(notas) == 0:
-        print("No hay notas registradas")
+        print("[x] No hay notas registradas")
     else:
         for estudiante in estudiantes:
             if estudiante["activo"]:
@@ -73,7 +73,7 @@ def promedio_estudiante_materias(estudiantes, materias, notas):
             break
 
     if estudiante is None:
-        print("Estudiante no encontrado")
+        print("[x] Estudiante no encontrado")
         input()
         return
 
@@ -84,7 +84,7 @@ def promedio_estudiante_materias(estudiantes, materias, notas):
     notas_alumno = [n for n in notas if n["id_estudiante"] == legajo]
 
     if not notas_alumno:
-        print("No hay notas para este estudiante")
+        print("[x] No hay notas para este estudiante")
     else:
         for materia in materias:
             if materia["activo"]:
@@ -109,7 +109,7 @@ def promedio_materia(materias, notas):
     # Pide un id de materia y muestra el promedio general de todas las
     # notas registradas para esa materia (de cualquier estudiante).
     limpiar_pantalla()
-    print("Materias disponibles:")
+    print("[✓] Materias disponibles:")
     print()
 
     for m in materias:
@@ -127,7 +127,7 @@ def promedio_materia(materias, notas):
             break
 
     if materia is None:
-        print("Materia no encontrada")
+        print("[x] Materia no encontrada")
         input()
         return
 
@@ -138,7 +138,7 @@ def promedio_materia(materias, notas):
     print()
 
     if not notas_materia:
-        print(f"No hay notas para {materia['nombre']}")
+        print(f" [x] No hay notas para {materia['nombre']}")
     else:
         calificaciones = list(map(lambda n: n["nota"], notas_materia))
         total_notas = reduce(lambda acc, nota: acc + nota, calificaciones, 0)
@@ -191,7 +191,7 @@ def mejor_estudiante(estudiantes, notas):
     print()
 
     if len(notas) == 0:
-        print("No hay notas registradas")
+        print("[x] No hay notas registradas")
     else:
         # Agrupar notas por estudiante
         # promedios queda como {legajo: [nota1, nota2, ...]} para poder
@@ -228,7 +228,7 @@ def peor_estudiante(estudiantes, notas):
     print()
 
     if len(notas) == 0:
-        print("No hay notas registradas")
+        print("[x] No hay notas registradas")
     else:
         # Agrupar notas por estudiante
         promedios = {}

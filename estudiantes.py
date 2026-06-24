@@ -9,7 +9,7 @@ from matrices import guardar_estudiantes
 def listar_estudiantes(alumnos):
     # Listado completo (activos e inactivos) con todos los datos.
     if len(alumnos) == 0:
-        input("No hay estudiantes")
+        input("[x] No hay estudiantes")
         return
 
     limpiar_pantalla()
@@ -32,13 +32,13 @@ def agregar_estudiante(estudiantes):
 
     nombre = input('Ingrese el nombre del alumno: ')
     while not validar_no_vacio(nombre):
-        print("Nombre inválido (no puede estar vacío)")
+        print("[x] Nombre inválido (no puede estar vacío)")
         nombre = input('Ingrese el nombre del alumno: ')
 
     mail = input('Ingrese el mail: ')
 
     while not validar_email(mail) or not validar_no_vacio(mail):
-        print("Email inválido")
+        print("[x] Email inválido")
         mail = input('Ingrese el mail: ')
 
     # El legajo se autogenera: si no hay estudiantes empieza en 1,
@@ -58,14 +58,14 @@ def agregar_estudiante(estudiantes):
     estudiantes.append(nuevo_estudiante)
     guardar_estudiantes(estudiantes)  # persiste el cambio en .txt y .json
 
-    input('Alumno cargado exitosamente, presione enter para continuar...')
+    input('[✓] Alumno cargado exitosamente, presione enter para continuar...')
 
 
 def mostrar_estudiantes(estudiantes):
     # Listado resumido (solo legajo y nombre), usado como ayuda visual antes
     # de pedir un legajo para modificar/eliminar/reactivar.
     if len(estudiantes) == 0:
-        print("No hay estudiantes\n")
+        print("[x] No hay estudiantes\n")
         return
 
     for alumno in estudiantes:
@@ -96,13 +96,13 @@ def prueba_modificar_estudiante(estudiantes):
     if posicion != -1:
         nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
         while not validar_no_vacio(nuevo_nombre):
-            print("Nombre inválido (no puede estar vacío)")
+            print("[x] Nombre inválido (no puede estar vacío)")
             nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
 
         nuevo_mail = input("Ingrese el nuevo mail: ")
 
         while not validar_email(nuevo_mail) or not validar_no_vacio(nuevo_mail):
-            print("Email inválido")
+            print("[x] Email inválido")
             nuevo_mail = input("Ingrese el nuevo mail: ")
 
         # Se modifica el diccionario en la posición encontrada (in-place).
@@ -113,7 +113,7 @@ def prueba_modificar_estudiante(estudiantes):
         print("Alumno modificado:", estudiantes[posicion])
         input()
     else:
-        print("No existe un alumno con ese legajo.")
+        print("[x] No existe un alumno con ese legajo.")
         input()
 
 
@@ -133,7 +133,7 @@ def eliminar_estudiante(estudiantes):
         guardar_estudiantes(estudiantes)
         input(f'El estudiante {estudiantes[posicion]["legajo"]} {estudiantes[posicion]["nombre"]} fue eliminado correctamente.')
     else:
-        input(f'No se encontro un estudiante con el legajo: {legajo_buscar}')
+        input(f'[x] No se encontro un estudiante con el legajo: {legajo_buscar}')
 
 
 def listar_estudiantes_inactivos(estudiantes):
@@ -142,7 +142,7 @@ def listar_estudiantes_inactivos(estudiantes):
     inactivos = [alumno for alumno in estudiantes if not alumno['activo']]
 
     if len(inactivos) == 0:
-        input("No hay estudiantes inactivos")
+        input("[x] No hay estudiantes inactivos")
         return
 
     limpiar_pantalla()
@@ -180,7 +180,7 @@ def reactivar_estudiante(estudiantes):
             guardar_estudiantes(estudiantes)
             input(f'El estudiante {estudiantes[posicion]["legajo"]} {estudiantes[posicion]["nombre"]} fue reactivado correctamente.')
     else:
-        input(f'No se encontro un estudiante con el legajo: {legajo}')
+        input(f'[x] No se encontro un estudiante con el legajo: {legajo}')
 
 
 def menu_estudiantes(estudiantes, rol):
@@ -232,10 +232,10 @@ def menu_estudiantes(estudiantes, rol):
             reactivar_estudiante(estudiantes)
 
         elif seleccion == '0':
-            print('Volviendo al menu anterior...')
+            print('[✓] Volviendo al menu anterior...')
             input()
 
         else:
             limpiar_pantalla()
-            print('Opcion invalida')
+            print('[x] Opcion invalida')
             input()
