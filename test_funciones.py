@@ -2,9 +2,10 @@ import unittest
 from unittest.mock import patch
 
 from funciones import validar_email, validar_no_vacio
-from estudiantes import buscar_por_estudiante
+from estudiantes import buscar_por_estudiante, buscar_estudiante_recursivo
 from materias import buscar_por_materia
 from notas import buscar_nota_recursiva
+from estadisticas import calcular_promedio_recursivo
 
 
 # ---------------------------------------------------------------------------
@@ -232,6 +233,67 @@ class TestBuscarNotaRecursiva(unittest.TestCase):
     def test_indice_inicial_personalizado(self):
         # Buscar desde la mitad de la lista; no debe encontrar id=1 (está antes)
         self.assertEqual(buscar_nota_recursiva(self.notas, 1, indice=1), -1)
+
+
+# ---------------------------------------------------------------------------
+# 8. Tests de buscar_estudiante_recursivo (estudiantes.py)
+# ---------------------------------------------------------------------------
+
+class TestBuscarEstudianteRecursivo(unittest.TestCase):
+
+    def setUp(self):
+        self.estudiantes = [
+            {"legajo": 10, "nombre": "Ana García",  "mail": "ana@mail.com",  "activo": True},
+            {"legajo": 20, "nombre": "Luis Pérez",  "mail": "luis@mail.com", "activo": True},
+            {"legajo": 30, "nombre": "María López", "mail": "maria@mail.com","activo": False},
+        ]
+
+    def test_estudiante_al_inicio(self):
+        self.assertEqual(buscar_estudiante_recursivo(self.estudiantes, 10), 0)
+
+    def test_estudiante_al_final(self):
+        self.assertEqual(buscar_estudiante_recursivo(self.estudiantes, 30), 2)
+
+    def test_estudiante_en_el_medio(self):
+        self.assertEqual(buscar_estudiante_recursivo(self.estudiantes, 20), 1)
+
+    def test_legajo_inexistente_devuelve_menos_uno(self):
+        self.assertEqual(buscar_estudiante_recursivo(self.estudiantes, 99), -1)
+
+    def test_lista_vacia_devuelve_menos_uno(self):
+        self.assertEqual(buscar_estudiante_recursivo([], 10), -1)
+
+    def test_indice_inicial_omite_elementos_anteriores(self):
+        # Buscar desde indice=1: no debe encontrar legajo=10 (está en índice 0)
+        self.assertEqual(buscar_estudiante_recursivo(self.estudiantes, 10, indice=1), -1)
+
+
+# ---------------------------------------------------------------------------
+# 9. Tests de calcular_promedio_recursivo (estadisticas.py)
+# ---------------------------------------------------------------------------
+
+class TestCalcularPromedioRecursivo(unittest.TestCase):
+
+    def test_lista_con_valores_iguales(self):
+        self.assertAlmostEqual(calcular_promedio_recursivo([5.0, 5.0, 5.0]), 5.0)
+
+    def test_lista_con_valores_distintos(self):
+        # (6 + 8 + 10) / 3 = 8.0
+        self.assertAlmostEqual(calcular_promedio_recursivo([6.0, 8.0, 10.0]), 8.0)
+
+    def test_lista_con_un_elemento(self):
+        self.assertAlmostEqual(calcular_promedio_recursivo([7.5]), 7.5)
+
+    def test_lista_vacia_devuelve_cero(self):
+        self.assertAlmostEqual(calcular_promedio_recursivo([]), 0.0)
+
+    def test_valores_con_decimales(self):
+        # (7.5 + 8.5) / 2 = 8.0
+        self.assertAlmostEqual(calcular_promedio_recursivo([7.5, 8.5]), 8.0)
+
+    def test_nota_minima_y_maxima(self):
+        # (0 + 10) / 2 = 5.0
+        self.assertAlmostEqual(calcular_promedio_recursivo([0.0, 10.0]), 5.0)
 
 
 if __name__ == "__main__":

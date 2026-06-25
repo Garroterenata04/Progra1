@@ -25,9 +25,9 @@ titulo = r"""
 
 
 def login_menu():
-    # Pantalla de login/registro. Devuelve el rol ('admin' o 'viewer') si el
-    # login fue exitoso, o None si el usuario elige salir.
-    # Nota: getpass.getpass() pide la contraseña sin mostrarla en pantalla.
+    """Pantalla de login y registro. Devuelve el rol ('admin' o 'viewer') si el
+    login fue exitoso, o None si el usuario elige salir.
+    Usa getpass para pedir la contraseña sin mostrarla en pantalla."""
     users = cargar_usuarios()
     while True:
         limpiar_pantalla()
@@ -52,10 +52,10 @@ def login_menu():
             for user in users:
                 if user['email'] == email and user['password'] == password:
                     print("[✓] Login exitoso")
-                    input("Presione enter para continuar")
+                    input("Presione enter para continuar...")
                     return user['rol']
             print(" [x] Email o contraseña incorrectos")
-            input("Presione enter para continuar")
+            input("Presione enter para continuar...")
         elif opcion == '2':
             # Alta de usuario nuevo. Los usuarios creados acá siempre quedan
             # con rol 'viewer' (no se puede crear un admin desde este menú).
@@ -66,11 +66,11 @@ def login_menu():
 
             if not validar_email(email):
                 print("Email inválido")
-                input("Presione enter para continuar")
+                input("Presione enter para continuar...")
                 continue
             if any(u['email'] == email for u in users):
                 print("Email ya registrado")
-                input("Presione enter para continuar")
+                input("Presione enter para continuar...")
                 continue
             password = getpass.getpass('Contraseña: ')
             while not validar_no_vacio(password):
@@ -83,7 +83,7 @@ def login_menu():
                 confirm = getpass.getpass('Confirmar contraseña: ')
             if password != confirm:
                 print(" [x] Contraseñas no coinciden")
-                input("Presione enter para continuar")
+                input("Presione enter para continuar...")
                 continue
             users.append({'email': email, 'password': password, 'rol': 'viewer'})
             try:
@@ -92,17 +92,16 @@ def login_menu():
             except OSError as e:
                 users.pop()
                 print(f" [x] Error al guardar el usuario: {e}")
-            input("Presione enter para continuar")
+            input("Presione enter para continuar...")
         elif opcion == '0':
             return None
         else:
             print(" [x] Opción inválida")
-            input("Presione enter para continuar")
+            input("Presione enter para continuar...")
 
-# función principal del programa
 def main():
-    # Los datos se cargan antes del login para que ya estén listos en
-    # memoria en el momento en que el usuario entra al menú principal.
+    """Punto de entrada del sistema. Carga los datos, autentica al usuario
+    y lanza el menú principal según el rol obtenido en el login."""
     estudiantes = cargar_estudiantes()
     materias = cargar_materias()
     notas = cargar_notas()

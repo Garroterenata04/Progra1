@@ -5,187 +5,219 @@ from matrices import guardar_estudiantes
 # La lista "estudiantes" se pasa siempre por parámetro y se modifica in-place
 # (append, asignación de claves), por eso no hace falta devolverla ni reasignarla.
 
+SEP = "-" * 40
+
+
+def _imprimir_estudiante(alumno):
+    """Imprime los datos de un estudiante con labels alineadas."""
+    print(f"  Legajo : {alumno['legajo']}")
+    print(f"  Nombre : {alumno['nombre']}")
+    print(f"  Mail   : {alumno['mail']}")
+    print(f"  Activo : {'Si' if alumno['activo'] else 'No'}")
+    print(SEP)
+
 
 def listar_estudiantes(alumnos):
-    # Listado completo (activos e inactivos) con todos los datos.
+    """Muestra el listado completo de estudiantes (activos e inactivos) con todos sus datos."""
     if len(alumnos) == 0:
-        input("[x] No hay estudiantes")
+        input("[x] No hay estudiantes. Presione enter...")
         return
 
     limpiar_pantalla()
     print("=== LISTA DE ESTUDIANTES ===")
     print()
     for alumno in alumnos:
-            print(f"Legajo: {alumno['legajo']}")
-            print(f"Nombre: {alumno['nombre']}")
-            print(f"Mail: {alumno['mail']}")
-            print(f"Activo: {'Sí' if alumno['activo'] else 'No'}")
-            print("-" * 30)
+        _imprimir_estudiante(alumno)
 
-    input()
+    input("\nPresione enter para continuar...")
 
 
 def agregar_estudiante(estudiantes):
+    """Solicita datos por consola y agrega un nuevo estudiante a la lista."""
     limpiar_pantalla()
     print("=== ALTA DE ESTUDIANTE ===")
     print()
 
-    nombre = input('Ingrese el nombre del alumno: ')
+    nombre = input("Nombre del alumno : ")
     while not validar_no_vacio(nombre):
-        print("[x] Nombre inválido (no puede estar vacío)")
-        nombre = input('Ingrese el nombre del alumno: ')
+        print("[x] El nombre no puede estar vacío.")
+        nombre = input("Nombre del alumno : ")
 
-    mail = input('Ingrese el mail: ')
-
+    mail = input("Mail              : ")
     while not validar_email(mail) or not validar_no_vacio(mail):
-        print("[x] Email inválido")
-        mail = input('Ingrese el mail: ')
+        print("[x] Email inválido.")
+        mail = input("Mail              : ")
 
     # El legajo se autogenera: si no hay estudiantes empieza en 1,
     # sino es el legajo del último cargado + 1.
-    if len(estudiantes) == 0:
-        nuevo_legajo = 1
-    else:
-        nuevo_legajo = estudiantes[-1]['legajo'] + 1
+    nuevo_legajo = 1 if len(estudiantes) == 0 else estudiantes[-1]['legajo'] + 1
 
     nuevo_estudiante = {
         'legajo': nuevo_legajo,
         'nombre': nombre,
-        'mail': mail,
+        'mail':   mail,
         'activo': True
     }
 
     estudiantes.append(nuevo_estudiante)
-    guardar_estudiantes(estudiantes)  # persiste el cambio en .txt y .json
 
-    input('[✓] Alumno cargado exitosamente, presione enter para continuar...')
+    try:
+        guardar_estudiantes(estudiantes)
+        input(f"\n[✓] Alumno cargado con legajo {nuevo_legajo}. Presione enter...")
+    except OSError as e:
+        estudiantes.pop()
+        input(f"[x] Error al guardar: {e}")
 
 
 def mostrar_estudiantes(estudiantes):
-    # Listado resumido (solo legajo y nombre), usado como ayuda visual antes
-    # de pedir un legajo para modificar/eliminar/reactivar.
+    """Muestra un listado resumido (legajo - nombre) de los estudiantes activos."""
     if len(estudiantes) == 0:
-        print("[x] No hay estudiantes\n")
+        print("[x] No hay estudiantes\n")
         return
 
     for alumno in estudiantes:
         if alumno['activo']:
-            print(f"{alumno['legajo']} - {alumno['nombre']}")
+            print(f"  {alumno['legajo']} - {alumno['nombre']}")
 
     print()
 
 
 def buscar_por_estudiante(estudiantes, legajo_buscado):
-    # Búsqueda lineal: recorre la lista y devuelve la posición (índice) del
-    # estudiante con ese legajo, o -1 si no lo encuentra.
+    """Búsqueda iterativa por legajo. Devuelve el índice en la lista o -1 si no existe."""
     for index, alumno in enumerate(estudiantes):
         if alumno['legajo'] == legajo_buscado:
             return index
     return -1
 
 
+def buscar_estudiante_recursivo(estudiantes, legajo_buscado, indice=0):
+    """Búsqueda recursiva por legajo. Devuelve el índice en la lista o -1 si no existe.
+    Caso base 1: se recorrió toda la lista → devuelve -1.
+    Caso base 2: el legajo coincide → devuelve el índice actual.
+    Caso recursivo: avanzar al siguiente elemento."""
+    if indice >= len(estudiantes):
+        return -1
+    if estudiantes[indice]['legajo'] == legajo_buscado:
+        return indice
+    return buscar_estudiante_recursivo(estudiantes, legajo_buscado, indice + 1)
+
+
 def prueba_modificar_estudiante(estudiantes):
+    """Permite modificar el nombre y mail de un estudiante existente."""
     limpiar_pantalla()
     print("=== MODIFICACION DE ESTUDIANTE ===")
     print()
     mostrar_estudiantes(estudiantes)
 
-    legajo_busqueda = validar_numero('Ingrese el legajo a modificar: ')
+    legajo_busqueda = validar_numero("Legajo a modificar : ")
     posicion = buscar_por_estudiante(estudiantes, legajo_busqueda)
 
-    if posicion != -1:
-        nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
-        while not validar_no_vacio(nuevo_nombre):
-            print("[x] Nombre inválido (no puede estar vacío)")
-            nuevo_nombre = input("Ingrese el nuevo nombre y apellido: ")
+    if posicion == -1:
+        input("[x] No existe un alumno con ese legajo. Presione enter...")
+        return
 
-        nuevo_mail = input("Ingrese el nuevo mail: ")
+    nuevo_nombre = input("Nuevo nombre       : ")
+    while not validar_no_vacio(nuevo_nombre):
+        print("[x] El nombre no puede estar vacío.")
+        nuevo_nombre = input("Nuevo nombre       : ")
 
-        while not validar_email(nuevo_mail) or not validar_no_vacio(nuevo_mail):
-            print("[x] Email inválido")
-            nuevo_mail = input("Ingrese el nuevo mail: ")
+    nuevo_mail = input("Nuevo mail         : ")
+    while not validar_email(nuevo_mail) or not validar_no_vacio(nuevo_mail):
+        print("[x] Email inválido.")
+        nuevo_mail = input("Nuevo mail         : ")
 
-        # Se modifica el diccionario en la posición encontrada (in-place).
-        estudiantes[posicion]['nombre'] = nuevo_nombre
-        estudiantes[posicion]['mail'] = nuevo_mail
+    estudiantes[posicion]['nombre'] = nuevo_nombre
+    estudiantes[posicion]['mail']   = nuevo_mail
+
+    try:
         guardar_estudiantes(estudiantes)
-
-        print("Alumno modificado:", estudiantes[posicion])
-        input()
-    else:
-        print("[x] No existe un alumno con ese legajo.")
-        input()
+        print(f"\n[✓] Alumno actualizado:")
+        _imprimir_estudiante(estudiantes[posicion])
+    except OSError as e:
+        print(f"[x] Error al guardar: {e}")
+    input("\nPresione enter para continuar...")
 
 
 def eliminar_estudiante(estudiantes):
-    # Baja lógica: no se borra de la lista, solo se marca activo=False.
-    # Así se conserva el historial y las notas asociadas siguen siendo válidas.
+    """Realiza una baja lógica: marca al estudiante como inactivo sin borrarlo."""
     limpiar_pantalla()
     print("=== BAJA DE ESTUDIANTE ===")
     print()
     mostrar_estudiantes(estudiantes)
 
-    legajo_buscar = validar_numero("Ingrese el legajo a eliminar: ")
-    posicion = buscar_por_estudiante(estudiantes, legajo_buscar)
+    legajo_buscar = validar_numero("Legajo a dar de baja : ")
+    posicion = buscar_estudiante_recursivo(estudiantes, legajo_buscar)
 
-    if posicion != -1:
-        estudiantes[posicion]['activo'] = False
+    if posicion == -1:
+        input(f"[x] No se encontró el legajo {legajo_buscar}. Presione enter...")
+        return
+
+    nombre = estudiantes[posicion]['nombre']
+    estudiantes[posicion]['activo'] = False
+
+    try:
         guardar_estudiantes(estudiantes)
-        input(f'El estudiante {estudiantes[posicion]["legajo"]} {estudiantes[posicion]["nombre"]} fue eliminado correctamente.')
-    else:
-        input(f'[x] No se encontro un estudiante con el legajo: {legajo_buscar}')
+        input(f"[✓] {nombre} (legajo {legajo_buscar}) dado de baja. Presione enter...")
+    except OSError as e:
+        estudiantes[posicion]['activo'] = True
+        input(f"[x] Error al guardar: {e}")
 
 
 def listar_estudiantes_inactivos(estudiantes):
-    """Muestra lista detallada de estudiantes inactivos"""
-    # List comprehension: filtra solo los que tienen activo == False.
+    """Muestra la lista detallada de estudiantes con baja lógica (activo=False)."""
     inactivos = [alumno for alumno in estudiantes if not alumno['activo']]
 
     if len(inactivos) == 0:
-        input("[x] No hay estudiantes inactivos")
+        input("[x] No hay estudiantes inactivos. Presione enter...")
         return
 
     limpiar_pantalla()
-    print("=== LISTA DE ESTUDIANTES INACTIVOS ===")
+    print("=== ESTUDIANTES INACTIVOS ===")
     print()
     for alumno in inactivos:
-        print(f"Legajo: {alumno['legajo']}")
-        print(f"Nombre: {alumno['nombre']}")
-        print(f"Mail: {alumno['mail']}")
-        print("-" * 30)
+        print(f"  Legajo : {alumno['legajo']}")
+        print(f"  Nombre : {alumno['nombre']}")
+        print(f"  Mail   : {alumno['mail']}")
+        print(SEP)
 
-    input()
+    input("\nPresione enter para continuar...")
 
 
 def reactivar_estudiante(estudiantes):
-    # Reactiva una baja lógica: vuelve a poner activo=True.
+    """Revierte una baja lógica: vuelve a poner activo=True al estudiante."""
     limpiar_pantalla()
     print("=== REACTIVAR ESTUDIANTE ===")
     print()
     listar_estudiantes_inactivos(estudiantes)
 
     inactivos = [alumno for alumno in estudiantes if not alumno['activo']]
-
     if len(inactivos) == 0:
         return
 
-    legajo = validar_numero("Ingrese el legajo a reactivar: ")
-    posicion = buscar_por_estudiante(estudiantes, legajo)
+    legajo = validar_numero("Legajo a reactivar : ")
+    posicion = buscar_estudiante_recursivo(estudiantes, legajo)
 
-    if posicion != -1:
-        if estudiantes[posicion]['activo']:
-            input(f'El estudiante {estudiantes[posicion]["legajo"]} ya está activo.')
-        else:
-            estudiantes[posicion]['activo'] = True
-            guardar_estudiantes(estudiantes)
-            input(f'El estudiante {estudiantes[posicion]["legajo"]} {estudiantes[posicion]["nombre"]} fue reactivado correctamente.')
-    else:
-        input(f'[x] No se encontro un estudiante con el legajo: {legajo}')
+    if posicion == -1:
+        input(f"[x] No se encontró el legajo {legajo}. Presione enter...")
+        return
+
+    if estudiantes[posicion]['activo']:
+        input(f"[x] El legajo {legajo} ya está activo. Presione enter...")
+        return
+
+    nombre = estudiantes[posicion]['nombre']
+    estudiantes[posicion]['activo'] = True
+
+    try:
+        guardar_estudiantes(estudiantes)
+        input(f"[✓] {nombre} (legajo {legajo}) reactivado. Presione enter...")
+    except OSError as e:
+        estudiantes[posicion]['activo'] = False
+        input(f"[x] Error al guardar: {e}")
 
 
 def menu_estudiantes(estudiantes, rol):
-    # Submenú de estudiantes. El admin tiene CRUD completo;
-    # el viewer solo puede consultar el listado (rol llega desde el login).
+    """Submenú de estudiantes. Admin tiene CRUD completo; viewer solo puede listar."""
     seleccion = ""
 
     while seleccion != '0':
@@ -194,48 +226,31 @@ def menu_estudiantes(estudiantes, rol):
         print()
 
         if rol == 'admin':
-            print("1. Alta de estudiante")
-            print("2. Modificacion de estudiante")
-            print("3. Baja de estudiante")
-            print("4. Lista de estudiantes")
-            print("5. Reactivar estudiante")
-        else:  # viewer
-            print("1. Lista de estudiantes")
+            print("1 - Alta de estudiante")
+            print("2 - Modificar estudiante")
+            print("3 - Baja de estudiante")
+            print("4 - Lista de estudiantes")
+            print("5 - Reactivar estudiante")
+        else:
+            print("1 - Lista de estudiantes")
 
-        print("0. Volver")
+        print("0 - Volver")
+        print()
+        seleccion = input("Opcion: ")
 
-        seleccion = input('Opcion: ')
-
-        # Cada opción chequea también el rol, porque el número "1" significa
-        # cosas distintas según si es admin (alta) o viewer (listar).
         if seleccion == '1' and rol == 'admin':
             agregar_estudiante(estudiantes)
-
         elif seleccion == '1' and rol == 'viewer':
-            limpiar_pantalla()
             listar_estudiantes(estudiantes)
-            input()
-
         elif seleccion == '2' and rol == 'admin':
-            limpiar_pantalla()
             prueba_modificar_estudiante(estudiantes)
-
         elif seleccion == '3' and rol == 'admin':
             eliminar_estudiante(estudiantes)
-
         elif seleccion == '4' and rol == 'admin':
-            limpiar_pantalla()
             listar_estudiantes(estudiantes)
-            input()
-
         elif seleccion == '5' and rol == 'admin':
             reactivar_estudiante(estudiantes)
-
         elif seleccion == '0':
-            print('[✓] Volviendo al menu anterior...')
-            input()
-
+            input("[✓] Volviendo... Presione enter...")
         else:
-            limpiar_pantalla()
-            print('[x] Opcion invalida')
-            input()
+            input("[x] Opcion invalida. Presione enter...")
