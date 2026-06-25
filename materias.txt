@@ -1,5 +1,0 @@
-1;Matematicas;True
-2;Fisica;True
-3;Quimica;True
-4;Programacion;True
-5;Ingles;True
