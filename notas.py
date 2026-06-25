@@ -7,6 +7,20 @@ from matrices import guardar_notas
 # registro (no hay baja lógica para notas).
 
 
+#----------------------------BUSQUEDA RECURSIVA----------------------------
+
+def buscar_nota_recursiva(notas, nota_id, indice=0):
+    """Busca una nota por id de forma recursiva. Devuelve el índice o -1."""
+    # Caso base 1: se recorrió toda la lista sin encontrar la nota
+    if indice >= len(notas):
+        return -1
+    # Caso base 2: se encontró la nota en la posición actual
+    if notas[indice]["id"] == nota_id:
+        return indice
+    # Caso recursivo: avanzar al siguiente elemento
+    return buscar_nota_recursiva(notas, nota_id, indice + 1)
+
+
 #----------------------------MENU NOTAS----------------------------
 
 def menu_notas(notas, estudiantes, materias, rol):
@@ -47,10 +61,10 @@ def menu_notas(notas, estudiantes, materias, rol):
             eliminar_nota(notas)
 
         elif seleccion == "0":
-            input("[✓] Volviendo...")
+            input("[✓] Volviendo...")
 
         else:
-            input("[x] Opcion invalida")
+            input("[x] Opcion invalida")
 
 
 #----------------------------AGREGAR NOTA----------------------------
@@ -66,7 +80,7 @@ def agregar_nota(notas, estudiantes, materias):
         return
 
     if len(materias) == 0:
-        input("[x] No hay materias cargadas")
+        input("[x] No hay materias cargadas")
         return
 
     # El id de la nota se autogenera igual que en estudiantes/materias.
@@ -113,7 +127,7 @@ def agregar_nota(notas, estudiantes, materias):
     opcion = input("Seleccione: ")
 
     while not validar_no_vacio(opcion):
-        print("[x] Opción inválida (no puede estar vacía)")
+        print("[x] Opción inválida (no puede estar vacía)")
         opcion = input("Seleccione: ")
 
     if opcion == "1":
@@ -143,9 +157,14 @@ def agregar_nota(notas, estudiantes, materias):
         "nota": nota,
         "descripcion": tipo
     })
-    guardar_notas(notas)  # persiste el cambio en .txt y .json
 
-    input("[✓] Nota cargada correctamente")
+    try:
+        guardar_notas(notas)
+        input("[✓] Nota cargada correctamente")
+    except OSError as e:
+        # Si falla el guardado, se revierte el append para no dejar datos inconsistentes
+        notas.pop()
+        input(f"[x] Error al guardar la nota: {e}")
 
 
 #----------------------------LISTAR NOTAS----------------------------
@@ -194,7 +213,7 @@ def modificar_nota(notas):
     print()
 
     if len(notas) == 0:
-        input(" [x] No hay notas")
+        input(" [x] No hay notas")
         return
 
     for n in notas:
@@ -204,24 +223,24 @@ def modificar_nota(notas):
 
     nota_id = validar_numero("Ingrese el ID de la nota a modificar: ")
 
-    # Búsqueda lineal de la nota por id (mismo patrón que en estudiantes/materias,
-    # pero hecho con un for + range en vez de enumerate).
-    posicion = -1
-
-    for i in range(len(notas)):
-        if notas[i]["id"] == nota_id:
-            posicion = i
-            break
+    # Búsqueda recursiva reemplaza el for + range anterior
+    posicion = buscar_nota_recursiva(notas, nota_id)
 
     if posicion == -1:
-        input("[x] No se encontro la nota")
+        input("[x] No se encontro la nota")
         return
 
     nueva = validar_nota("Nueva nota (0-10): ")
+    nota_anterior = notas[posicion]["nota"]
     notas[posicion]["nota"] = nueva
-    guardar_notas(notas)
 
-    input("Nota modificada")
+    try:
+        guardar_notas(notas)
+        input("Nota modificada")
+    except OSError as e:
+        # Si falla el guardado, se restaura el valor anterior
+        notas[posicion]["nota"] = nota_anterior
+        input(f"[x] Error al guardar los cambios: {e}")
 
 
 #----------------------------ELIMINAR NOTA----------------------------
@@ -234,27 +253,29 @@ def eliminar_nota(notas):
     print()
 
     if len(notas) == 0:
-        input("[x] No hay notas")
+        input("[x] No hay notas")
         return
 
     for n in notas:
         print("ID:", n["id"])
         print("Nota:", n["nota"])
         print("Tipo:", n["descripcion"])
+
     nota_id = validar_numero("Ingrese el ID de la nota a eliminar: ")
 
-    posicion = -1
-
-    for i in range(len(notas)):
-        if notas[i]["id"] == nota_id:
-            posicion = i
-            break
+    # Búsqueda recursiva reemplaza el for + range anterior
+    posicion = buscar_nota_recursiva(notas, nota_id)
 
     if posicion == -1:
-        input("[x] No se encontro la nota")
+        input("[x] No se encontro la nota")
         return
 
-    notas.pop(posicion)
-    guardar_notas(notas)
+    nota_eliminada = notas.pop(posicion)
 
-    input("Nota eliminada correctamente")
+    try:
+        guardar_notas(notas)
+        input("Nota eliminada correctamente")
+    except OSError as e:
+        # Si falla el guardado, se reinserta la nota en su posición original
+        notas.insert(posicion, nota_eliminada)
+        input(f"[x] Error al guardar los cambios: {e}")

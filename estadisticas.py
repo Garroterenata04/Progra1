@@ -1,6 +1,6 @@
 from funciones import limpiar_pantalla, validar_numero
 from functools import reduce
-from matrices import cargar_json, ESTUDIANTES_JSON_FILE, MATERIAS_JSON_FILE, NOTAS_JSON_FILE
+from matrices import cargar_estudiantes, cargar_materias, cargar_notas
 
 # Módulo de reportes/estadísticas sobre estudiantes, materias y notas.
 # Usa programación funcional (map, filter, reduce, lambdas) en vez de
@@ -256,12 +256,11 @@ def peor_estudiante(estudiantes, notas):
 def mostrar_estadisticas():
     # Submenú de estadísticas: no distingue por rol, cualquier usuario
     # logueado puede ver todos los reportes (son de solo lectura).
-    # A diferencia de los otros menús, recarga los datos desde el .json en
-    # cada vuelta del while, para reflejar cambios hechos en otros menús.
+    # Recarga los datos en cada vuelta para reflejar cambios hechos en otros menús.
     while True:
-        estudiantes = cargar_json(ESTUDIANTES_JSON_FILE) or []
-        materias = cargar_json(MATERIAS_JSON_FILE) or []
-        notas = cargar_json(NOTAS_JSON_FILE) or []
+        estudiantes = cargar_estudiantes()
+        materias    = cargar_materias()
+        notas       = cargar_notas()
 
         limpiar_pantalla()
         print("=== ESTADISTICAS ===")

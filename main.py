@@ -1,6 +1,6 @@
 import getpass
 from funciones import limpiar_pantalla, validar_email, validar_no_vacio
-from matrices import cargar_estudiantes, cargar_materias, cargar_notas, cargar_usuarios
+from matrices import cargar_estudiantes, cargar_materias, cargar_notas, cargar_usuarios, guardar_usuarios
 from estudiantes import menu_estudiantes
 from materias import menu_materias
 from notas import menu_notas
@@ -85,10 +85,13 @@ def login_menu():
                 print(" [x] Contraseñas no coinciden")
                 input("Presione enter para continuar")
                 continue
-            # Nota: como cargar_usuarios() no persiste en archivo, este
-            # usuario nuevo solo existe mientras el programa siga corriendo.
             users.append({'email': email, 'password': password, 'rol': 'viewer'})
-            print(" [✓] Usuario creado exitosamente")
+            try:
+                guardar_usuarios(users)
+                print(" [✓] Usuario creado exitosamente")
+            except OSError as e:
+                users.pop()
+                print(f" [x] Error al guardar el usuario: {e}")
             input("Presione enter para continuar")
         elif opcion == '0':
             return None
