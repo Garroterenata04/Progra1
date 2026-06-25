@@ -1,11 +1,17 @@
 from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota
 from matrices import guardar_notas
 
+# Módulo CRUD de notas. Cada nota relaciona un estudiante (id_estudiante)
+# con una materia (id_materia) y un tipo de evaluación (descripcion).
+# A diferencia de estudiantes/materias, eliminar_nota borra realmente el
+# registro (no hay baja lógica para notas).
+
 
 #----------------------------MENU NOTAS----------------------------
 
 def menu_notas(notas, estudiantes, materias, rol):
-
+    # Submenú de notas. El admin tiene CRUD completo;
+    # el viewer solo puede consultar el listado.
     seleccion = ""
 
     while seleccion != "0":
@@ -21,11 +27,13 @@ def menu_notas(notas, estudiantes, materias, rol):
             print("4 - Eliminar nota")
         else:  # viewer
             print("1 - Lista de notas")
-        
+
         print("0 - Volver")
 
         seleccion = input("Opcion: ")
 
+        # Cada opción chequea también el rol, porque el número "1" significa
+        # cosas distintas según si es admin (ingresar) o viewer (listar).
         if seleccion == "1" and rol == 'admin':
             agregar_nota(notas, estudiantes, materias)
 
@@ -39,10 +47,10 @@ def menu_notas(notas, estudiantes, materias, rol):
             eliminar_nota(notas)
 
         elif seleccion == "0":
-            input("Volviendo...")
+            input("[✓] Volviendo...")
 
         else:
-            input("Opcion invalida")
+            input("[x] Opcion invalida")
 
 
 #----------------------------AGREGAR NOTA----------------------------
@@ -52,19 +60,23 @@ def agregar_nota(notas, estudiantes, materias):
     print("=== ALTA DE NOTA ===")
     print()
 
+    # Sin estudiantes o materias cargadas no hay nada para relacionar.
     if len(estudiantes) == 0:
-        input("No hay estudiantes cargados")
+        input("[x] No hay estudiantes cargados")
         return
 
     if len(materias) == 0:
-        input("No hay materias cargadas")
+        input("[x] No hay materias cargadas")
         return
 
+    # El id de la nota se autogenera igual que en estudiantes/materias.
     if len(notas) == 0:
         nota_id = 1
     else:
         nota_id = notas[-1]["id"] + 1
 
+    # Se muestran los estudiantes y materias activos como ayuda para elegir
+    # los ids correctos antes de pedirlos por teclado.
     print("\n--- ESTUDIANTES ---")
     for e in estudiantes:
         if e['activo']:
@@ -76,21 +88,21 @@ def agregar_nota(notas, estudiantes, materias):
             print(f"ID: {m['id']} - Nombre: {m['nombre']}")
 
     alumno_id = validar_numero("Ingrese el legajo del alumno: ")
-    
+
     # Validar que el estudiante exista y esté activo
     estudiante_existe = any(e['legajo'] == alumno_id and e['activo'] for e in estudiantes)
     if not estudiante_existe:
-        input("El estudiante no existe o está inactivo")
+        input("[x] El estudiante no existe o está inactivo")
         return
-    
+
     materia_id = validar_numero("Ingrese el ID de la materia: ")
-    
+
     # Validar que la materia exista y esté activa
     materia_existe = any(m['id'] == materia_id and m['activo'] for m in materias)
     if not materia_existe:
-        input("La materia no existe o está inactiva")
+        input("[x] La materia no existe o está inactiva")
         return
-    
+
     nota = validar_nota("Ingrese la nota (0-10): ")
 
     print("Tipo de nota:")
@@ -99,9 +111,9 @@ def agregar_nota(notas, estudiantes, materias):
     print("3 - Final")
 
     opcion = input("Seleccione: ")
-    
+
     while not validar_no_vacio(opcion):
-        print("Opción inválida (no puede estar vacía)")
+        print("[x] Opción inválida (no puede estar vacía)")
         opcion = input("Seleccione: ")
 
     if opcion == "1":
@@ -113,13 +125,15 @@ def agregar_nota(notas, estudiantes, materias):
     else:
         input("Tipo invalido")
         return
-    
+
+    # No se permite cargar dos veces la misma evaluación (mismo alumno,
+    # misma materia y mismo tipo) para evitar notas duplicadas.
     existe = list(filter(lambda n: n["id_estudiante"] == alumno_id  #no existe si esta vacia
-                               and n["id_materia"] == materia_id 
+                               and n["id_materia"] == materia_id
                                and n["descripcion"] == tipo, notas))
 
     if existe: #lambda, filter
-        input("Esa nota ya existe para este alumno")
+        input("[✓] Esa nota ya existe para este alumno")
         return
 
     notas.append({#diccionarios y para que el acceso sea mas claro
@@ -129,9 +143,9 @@ def agregar_nota(notas, estudiantes, materias):
         "nota": nota,
         "descripcion": tipo
     })
-    guardar_notas(notas)
+    guardar_notas(notas)  # persiste el cambio en .txt y .json
 
-    input("Nota cargada correctamente")
+    input("[✓] Nota cargada correctamente")
 
 
 #----------------------------LISTAR NOTAS----------------------------
@@ -146,20 +160,22 @@ def lista_nota(notas, estudiantes, materias):
     print("=== LISTA DE NOTAS ===")
     print()
     for n in notas:
+        # Las notas solo guardan los ids; para mostrar algo legible hay que
+        # buscar el nombre del estudiante y de la materia correspondientes.
         # Buscar nombre del estudiante
         nombre_alumno = str(n["id_estudiante"])  # Si no encuentra, muestra el ID
         for e in estudiantes:
             if e["legajo"] == n["id_estudiante"]:
                 nombre_alumno = e["nombre"]
                 break
-        
+
         # Buscar nombre de la materia
         nombre_materia = str(n["id_materia"])  # Si no encuentra, muestra el ID
         for m in materias:
             if m["id"] == n["id_materia"]:
                 nombre_materia = m["nombre"]
                 break
-        
+
         print(f"ID: {n['id']}")
         print(f"Alumno: {nombre_alumno}")
         print(f"Materia: {nombre_materia}")
@@ -178,7 +194,7 @@ def modificar_nota(notas):
     print()
 
     if len(notas) == 0:
-        input("No hay notas")
+        input(" [x] No hay notas")
         return
 
     for n in notas:
@@ -188,6 +204,8 @@ def modificar_nota(notas):
 
     nota_id = validar_numero("Ingrese el ID de la nota a modificar: ")
 
+    # Búsqueda lineal de la nota por id (mismo patrón que en estudiantes/materias,
+    # pero hecho con un for + range en vez de enumerate).
     posicion = -1
 
     for i in range(len(notas)):
@@ -196,7 +214,7 @@ def modificar_nota(notas):
             break
 
     if posicion == -1:
-        input("No se encontro la nota")
+        input("[x] No se encontro la nota")
         return
 
     nueva = validar_nota("Nueva nota (0-10): ")
@@ -209,12 +227,14 @@ def modificar_nota(notas):
 #----------------------------ELIMINAR NOTA----------------------------
 
 def eliminar_nota(notas):
+    # A diferencia de estudiantes y materias, acá no hay baja lógica:
+    # notas.pop() borra la nota definitivamente de la lista.
     limpiar_pantalla()
     print("=== ELIMINACION DE NOTA ===")
     print()
 
     if len(notas) == 0:
-        input("No hay notas")
+        input("[x] No hay notas")
         return
 
     for n in notas:
@@ -231,7 +251,7 @@ def eliminar_nota(notas):
             break
 
     if posicion == -1:
-        input("No se encontro la nota")
+        input("[x] No se encontro la nota")
         return
 
     notas.pop(posicion)

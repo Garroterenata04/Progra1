@@ -1,27 +1,33 @@
-﻿import getpass
+import getpass
 from funciones import limpiar_pantalla, validar_email, validar_no_vacio
 from matrices import cargar_estudiantes, cargar_materias, cargar_notas, cargar_usuarios
 from estudiantes import menu_estudiantes
 from materias import menu_materias
 from notas import menu_notas
 from estadisticas import mostrar_estadisticas
-titulo = """    
 
-   ____           _   _   __                        
-  / ___| ___  ___| |_(_) /_/  _ __                  
- | |  _ / _ \/ __| __| |/ _ \| '_ \                 
- | |_| |  __/\__ \ |_| | (_) | | | |                
-  \____|\___||___/\__|_|\___/|_| |_|    _           
-    / \   ___ __ _  __| | ___ _ __ ___ (_) ___ __ _ 
+# Punto de entrada del sistema: login y menú principal.
+
+titulo = r"""
+
+   ____           _   _   __
+  / ___| ___  ___| |_(_) /_/  _ __
+ | |  _ / _ \/ __| __| |/ _ \| '_ \
+ | |_| |  __/\__ \ |_| | (_) | | | |
+  \____|\___||___/\__|_|\___/|_| |_|    _
+    / \   ___ __ _  __| | ___ _ __ ___ (_) ___ __ _
    / _ \ / __/ _` |/ _` |/ _ \ '_ ` _ \| |/ __/ _` |
   / ___ \ (_| (_| | (_| |  __/ | | | | | | (_| (_| |
  /_/   \_\___\__,_|\__,_|\___|_| |_| |_|_|\___\__,_|
-                                                          
+
         """
 
 
 
 def login_menu():
+    # Pantalla de login/registro. Devuelve el rol ('admin' o 'viewer') si el
+    # login fue exitoso, o None si el usuario elige salir.
+    # Nota: getpass.getpass() pide la contraseña sin mostrarla en pantalla.
     users = cargar_usuarios()
     while True:
         limpiar_pantalla()
@@ -37,24 +43,27 @@ def login_menu():
             while not validar_no_vacio(email):
                 print("Email no puede estar vacío")
                 email = input('Email: ')
-            
+
             password = getpass.getpass('Contraseña: ')
             while not validar_no_vacio(password):
                 print("Contraseña no puede estar vacía")
                 password = getpass.getpass('Contraseña: ')
+            # Se busca un usuario cuyo email y password coincidan exactamente.
             for user in users:
                 if user['email'] == email and user['password'] == password:
-                    print("Login exitoso")
+                    print("[✓] Login exitoso")
                     input("Presione enter para continuar")
                     return user['rol']
-            print("Email o contraseña incorrectos")
+            print(" [x] Email o contraseña incorrectos")
             input("Presione enter para continuar")
         elif opcion == '2':
+            # Alta de usuario nuevo. Los usuarios creados acá siempre quedan
+            # con rol 'viewer' (no se puede crear un admin desde este menú).
             email = input('Email: ')
             while not validar_no_vacio(email):
-                print("Email no puede estar vacío")
+                print(" [x] Email no puede estar vacío")
                 email = input('Email: ')
-            
+
             if not validar_email(email):
                 print("Email inválido")
                 input("Presione enter para continuar")
@@ -65,28 +74,32 @@ def login_menu():
                 continue
             password = getpass.getpass('Contraseña: ')
             while not validar_no_vacio(password):
-                print("Contraseña no puede estar vacía")
+                print(" [x] Contraseña no puede estar vacía")
                 password = getpass.getpass('Contraseña: ')
-            
+
             confirm = getpass.getpass('Confirmar contraseña: ')
             while not validar_no_vacio(confirm):
                 print("Confirmar contraseña no puede estar vacío")
                 confirm = getpass.getpass('Confirmar contraseña: ')
             if password != confirm:
-                print("Contraseñas no coinciden")
+                print(" [x] Contraseñas no coinciden")
                 input("Presione enter para continuar")
                 continue
+            # Nota: como cargar_usuarios() no persiste en archivo, este
+            # usuario nuevo solo existe mientras el programa siga corriendo.
             users.append({'email': email, 'password': password, 'rol': 'viewer'})
-            print("Usuario creado exitosamente")
+            print(" [✓] Usuario creado exitosamente")
             input("Presione enter para continuar")
         elif opcion == '0':
             return None
         else:
-            print("Opción inválida")
+            print(" [x] Opción inválida")
             input("Presione enter para continuar")
 
 # función principal del programa
 def main():
+    # Los datos se cargan antes del login para que ya estén listos en
+    # memoria en el momento en que el usuario entra al menú principal.
     estudiantes = cargar_estudiantes()
     materias = cargar_materias()
     notas = cargar_notas()
@@ -98,8 +111,11 @@ def main():
     opcion = ""
 
     # menú que se repite hasta que el usuario elija salir
+    # estudiantes, materias y notas son listas (mutables): se pasan por
+    # referencia a cada submenú, así los cambios se reflejan en todos lados
+    # sin necesidad de devolver y reasignar nada.
     while opcion != "0":
-        
+
 
         limpiar_pantalla()
         print("=== MENU PRINCIPAL ===")
@@ -128,14 +144,14 @@ def main():
         elif opcion == '4':
 
             mostrar_estadisticas()
-        
+
         elif opcion == '0':
 
             print('Saliendo...')
 
         else:
 
-            print('opcion invalida')
+            print('[x] opcion invalida')
             input()
 
 
