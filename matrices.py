@@ -1,14 +1,14 @@
 import os
 import json
 
-# Módulo de persistencia: centraliza la lectura y escritura de datos en JSON.
-# Toda la lógica de I/O pasa por _guardar/_cargar para que los módulos CRUD
-# nunca interactúen directamente con el sistema de archivos.
+# Módulo de persistencia: centraliza la lectura y escritura de datos.
+# Estudiantes, materias y notas usan JSON. Usuarios usa texto plano (.txt)
+# para demostrar el manejo de ambos formatos de archivo.
 
 ESTUDIANTES_JSON = "estudiantes.json"
 MATERIAS_JSON    = "materias.json"
 NOTAS_JSON       = "notas.json"
-USUARIOS_JSON    = "usuarios.json"
+USUARIOS_TXT     = "usuarios.txt"
 
 _USUARIOS_DEFAULT = [
     {'email': 'admin@uade.edu.ar', 'password': 'admin',   'rol': 'admin'},
@@ -51,13 +51,21 @@ def cargar_materias():       return _cargar(MATERIAS_JSON)
 def guardar_notas(datos): _guardar(NOTAS_JSON, datos)
 def cargar_notas():       return _cargar(NOTAS_JSON)
 
-def guardar_usuarios(datos): _guardar(USUARIOS_JSON, datos)
+def guardar_usuarios(usuarios):
+    """Escribe la lista de usuarios en texto plano (email;password;rol por línea)."""
+    with open(USUARIOS_TXT, 'w', encoding='utf-8') as f:
+        for u in usuarios:
+            f.write(f"{u['email']};{u['password']};{u['rol']}\n")
 
 
 def cargar_usuarios():
-    """Carga usuarios desde JSON. En la primera ejecución persiste los defaults."""
-    datos = _cargar(USUARIOS_JSON)
-    if not datos:
+    """Lee usuarios desde texto plano. En la primera ejecución persiste los defaults."""
+    if not os.path.exists(USUARIOS_TXT):
         guardar_usuarios(_USUARIOS_DEFAULT)
         return list(_USUARIOS_DEFAULT)
-    return datos
+    usuarios = []
+    with open(USUARIOS_TXT, 'r', encoding='utf-8') as f:
+        for linea in f:
+            email, password, rol = linea.strip().split(';')
+            usuarios.append({'email': email, 'password': password, 'rol': rol})
+    return usuarios
