@@ -6,8 +6,7 @@ import re
 
 
 def limpiar_pantalla():
-    # os.name es 'nt' en Windows y 'posix' en Mac/Linux, por eso el comando
-    # de limpiar consola cambia según el sistema operativo.
+    """Limpia la pantalla de la consola (cls en Windows, clear en Mac/Linux)."""
     if os.name == 'nt':
         os.system('cls')      # Windows
     else:
