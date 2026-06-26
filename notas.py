@@ -1,12 +1,10 @@
-from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota
+from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, validar_nota, imprimir_tabla
 from matrices import guardar_notas
 
 # Módulo CRUD de notas. Cada nota relaciona un estudiante (id_estudiante)
 # con una materia (id_materia) y un tipo de evaluación (descripcion).
 # A diferencia de estudiantes/materias, eliminar_nota borra realmente el
 # registro (no hay baja lógica para notas).
-
-SEP = "-" * 40
 
 
 #----------------------------BUSQUEDA RECURSIVA----------------------------
@@ -78,17 +76,11 @@ def agregar_nota(notas, estudiantes, materias):
 
     nota_id = 1 if len(notas) == 0 else notas[-1]["id"] + 1
 
-    # Se muestran los estudiantes y materias activos para facilitar la selección.
     print("--- ESTUDIANTES ACTIVOS ---")
-    for e in estudiantes:
-        if e['activo']:
-            print(f"  {e['legajo']} - {e['nombre']}")
-
+    imprimir_tabla(['Legajo', 'Nombre'], [[e['legajo'], e['nombre']] for e in estudiantes if e['activo']])
     print()
     print("--- MATERIAS ACTIVAS ---")
-    for m in materias:
-        if m['activo']:
-            print(f"  {m['id']} - {m['nombre']}")
+    imprimir_tabla(['ID', 'Nombre'], [[m['id'], m['nombre']] for m in materias if m['activo']])
     print()
 
     alumno_id = validar_numero("Legajo del alumno : ")
@@ -158,29 +150,74 @@ def agregar_nota(notas, estudiantes, materias):
 
 #----------------------------LISTAR NOTAS----------------------------
 
+def _filas_notas(notas_filtradas, estudiantes, materias):
+    """Convierte una lista de notas en filas para imprimir_tabla."""
+    filas = []
+    for n in notas_filtradas:
+        nombre_alumno  = next((e["nombre"] for e in estudiantes if e["legajo"] == n["id_estudiante"]), str(n["id_estudiante"]))
+        nombre_materia = next((m["nombre"] for m in materias   if m["id"]     == n["id_materia"]),    str(n["id_materia"]))
+        filas.append([n['id'], nombre_alumno, nombre_materia, n['nota'], n['descripcion']])
+    return filas
+
+
+def _notas_por_alumno(notas, estudiantes, materias):
+    """Muestra notas filtradas por el legajo que ingrese el usuario."""
+    legajos_con_notas = list({n["id_estudiante"] for n in notas})
+    alumnos_con_notas = [e for e in estudiantes if e["legajo"] in legajos_con_notas]
+
+    if len(alumnos_con_notas) == 0:
+        input("[x] No hay alumnos con notas registradas. Presione enter...")
+        return
+
+    print("--- ALUMNOS CON NOTAS ---")
+    imprimir_tabla(['Legajo', 'Nombre'], [[e['legajo'], e['nombre']] for e in alumnos_con_notas])
+    print()
+
+    legajo = validar_numero("Legajo del alumno : ")
+
+    notas_alumno = [n for n in notas if n["id_estudiante"] == legajo]
+    if len(notas_alumno) == 0:
+        input(f"[x] No hay notas para el legajo {legajo}. Presione enter...")
+        return
+
+    nombre = next((e["nombre"] for e in estudiantes if e["legajo"] == legajo), str(legajo))
+    print(f"\nNotas de {nombre}:")
+    imprimir_tabla(['ID', 'Alumno', 'Materia', 'Nota', 'Tipo'], _filas_notas(notas_alumno, estudiantes, materias))
+    input("\nPresione enter para continuar...")
+
+
 def lista_nota(notas, estudiantes, materias):
-    """Muestra el listado de notas con nombre del alumno y de la materia."""
+    """Submenú de listado de notas: ver todas o buscar por alumno."""
     if len(notas) == 0:
         input("[x] No hay notas registradas. Presione enter...")
         return
 
-    limpiar_pantalla()
-    print("=== LISTA DE NOTAS ===")
-    print()
+    seleccion = ""
+    while seleccion != "0":
+        limpiar_pantalla()
+        print("=== LISTA DE NOTAS ===")
+        print()
+        print("1 - Ver todas las notas")
+        print("2 - Buscar por alumno")
+        print("0 - Volver")
+        print()
+        seleccion = input("Opcion: ")
 
-    for n in notas:
-        # Resolver ids a nombres para mostrar información legible
-        nombre_alumno  = next((e["nombre"] for e in estudiantes if e["legajo"] == n["id_estudiante"]), str(n["id_estudiante"]))
-        nombre_materia = next((m["nombre"] for m in materias   if m["id"]     == n["id_materia"]),    str(n["id_materia"]))
-
-        print(f"  ID       : {n['id']}")
-        print(f"  Alumno   : {nombre_alumno}")
-        print(f"  Materia  : {nombre_materia}")
-        print(f"  Nota     : {n['nota']}")
-        print(f"  Tipo     : {n['descripcion']}")
-        print(SEP)
-
-    input("\nPresione enter para continuar...")
+        if seleccion == "1":
+            limpiar_pantalla()
+            print("=== TODAS LAS NOTAS ===")
+            print()
+            imprimir_tabla(['ID', 'Alumno', 'Materia', 'Nota', 'Tipo'], _filas_notas(notas, estudiantes, materias))
+            input("\nPresione enter para continuar...")
+        elif seleccion == "2":
+            limpiar_pantalla()
+            print("=== BUSCAR NOTAS POR ALUMNO ===")
+            print()
+            _notas_por_alumno(notas, estudiantes, materias)
+        elif seleccion == "0":
+            pass
+        else:
+            input("[x] Opcion invalida. Presione enter...")
 
 
 #----------------------------MODIFICAR NOTA----------------------------
@@ -195,8 +232,7 @@ def modificar_nota(notas):
         input("[x] No hay notas registradas. Presione enter...")
         return
 
-    for n in notas:
-        print(f"  ID {n['id']} - {n['descripcion']} : {n['nota']}")
+    imprimir_tabla(['ID', 'Tipo', 'Nota'], [[n['id'], n['descripcion'], n['nota']] for n in notas])
     print()
 
     nota_id  = validar_numero("ID de la nota a modificar : ")
@@ -230,8 +266,7 @@ def eliminar_nota(notas):
         input("[x] No hay notas registradas. Presione enter...")
         return
 
-    for n in notas:
-        print(f"  ID {n['id']} - {n['descripcion']} : {n['nota']}")
+    imprimir_tabla(['ID', 'Tipo', 'Nota'], [[n['id'], n['descripcion'], n['nota']] for n in notas])
     print()
 
     nota_id  = validar_numero("ID de la nota a eliminar : ")

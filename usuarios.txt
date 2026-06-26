@@ -3,3 +3,4 @@ guido@guido.com;123;viewer
 uade@uade.com;1234;viewer
 1@gmail.com;123456;viewer
 garrote@gmail.com;garrote;viewer
+pupi@pupi.com;123;admin

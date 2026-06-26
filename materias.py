@@ -1,18 +1,8 @@
-from funciones import limpiar_pantalla, validar_no_vacio, validar_numero
+from funciones import limpiar_pantalla, validar_no_vacio, validar_numero, imprimir_tabla
 from matrices import guardar_materias
 
 # Módulo CRUD de materias: alta, baja, modificación y listados.
 # A diferencia de estudiantes.py, no tiene función de reactivar.
-
-SEP = "-" * 40
-
-
-def _imprimir_materia(materia):
-    """Imprime los datos de una materia con labels alineadas."""
-    print(f"  ID     : {materia['id']}")
-    print(f"  Nombre : {materia['nombre']}")
-    print(f"  Activo : {'Si' if materia['activo'] else 'No'}")
-    print(SEP)
 
 
 def agregar_materia(materias):
@@ -47,14 +37,13 @@ def agregar_materia(materias):
 
 def mostrar_materias(materias):
     """Muestra un listado resumido (id - nombre) de las materias activas."""
-    if len(materias) == 0:
+    activas = [m for m in materias if m['activo']]
+    if len(activas) == 0:
         print("[x] No hay materias\n")
         return
 
-    for materia in materias:
-        if materia['activo']:
-            print(f"  {materia['id']} - {materia['nombre']}")
-
+    filas = [[m['id'], m['nombre']] for m in activas]
+    imprimir_tabla(['ID', 'Nombre'], filas)
     print()
 
 
@@ -67,9 +56,8 @@ def listar_materias(materias):
     limpiar_pantalla()
     print("=== LISTA DE MATERIAS ===")
     print()
-    for materia in materias:
-        _imprimir_materia(materia)
-
+    filas = [[m['id'], m['nombre'], 'Si' if m['activo'] else 'No'] for m in materias]
+    imprimir_tabla(['ID', 'Nombre', 'Activo'], filas)
     input("\nPresione enter para continuar...")
 
 
@@ -104,8 +92,9 @@ def modificar_materia(materias):
 
     try:
         guardar_materias(materias)
+        m = materias[posicion]
         print(f"\n[✓] Materia actualizada:")
-        _imprimir_materia(materias[posicion])
+        imprimir_tabla(['ID', 'Nombre', 'Activo'], [[m['id'], m['nombre'], 'Si' if m['activo'] else 'No']])
     except OSError as e:
         print(f"[x] Error al guardar: {e}")
     input("\nPresione enter para continuar...")

@@ -1,20 +1,9 @@
-from funciones import limpiar_pantalla, validar_email, validar_no_vacio, validar_numero
+from funciones import limpiar_pantalla, validar_email, validar_no_vacio, validar_numero, imprimir_tabla
 from matrices import guardar_estudiantes
 
 # Módulo CRUD de estudiantes: alta, baja, modificación, listados y reactivación.
 # La lista "estudiantes" se pasa siempre por parámetro y se modifica in-place
 # (append, asignación de claves), por eso no hace falta devolverla ni reasignarla.
-
-SEP = "-" * 40
-
-
-def _imprimir_estudiante(alumno):
-    """Imprime los datos de un estudiante con labels alineadas."""
-    print(f"  Legajo : {alumno['legajo']}")
-    print(f"  Nombre : {alumno['nombre']}")
-    print(f"  Mail   : {alumno['mail']}")
-    print(f"  Activo : {'Si' if alumno['activo'] else 'No'}")
-    print(SEP)
 
 
 def listar_estudiantes(alumnos):
@@ -26,9 +15,8 @@ def listar_estudiantes(alumnos):
     limpiar_pantalla()
     print("=== LISTA DE ESTUDIANTES ===")
     print()
-    for alumno in alumnos:
-        _imprimir_estudiante(alumno)
-
+    filas = [[a['legajo'], a['nombre'], a['mail'], 'Si' if a['activo'] else 'No'] for a in alumnos]
+    imprimir_tabla(['Legajo', 'Nombre', 'Mail', 'Activo'], filas)
     input("\nPresione enter para continuar...")
 
 
@@ -71,14 +59,13 @@ def agregar_estudiante(estudiantes):
 
 def mostrar_estudiantes(estudiantes):
     """Muestra un listado resumido (legajo - nombre) de los estudiantes activos."""
-    if len(estudiantes) == 0:
+    activos = [a for a in estudiantes if a['activo']]
+    if len(activos) == 0:
         print("[x] No hay estudiantes\n")
         return
 
-    for alumno in estudiantes:
-        if alumno['activo']:
-            print(f"  {alumno['legajo']} - {alumno['nombre']}")
-
+    filas = [[a['legajo'], a['nombre']] for a in activos]
+    imprimir_tabla(['Legajo', 'Nombre'], filas)
     print()
 
 
@@ -131,8 +118,9 @@ def prueba_modificar_estudiante(estudiantes):
 
     try:
         guardar_estudiantes(estudiantes)
+        a = estudiantes[posicion]
         print(f"\n[✓] Alumno actualizado:")
-        _imprimir_estudiante(estudiantes[posicion])
+        imprimir_tabla(['Legajo', 'Nombre', 'Mail', 'Activo'], [[a['legajo'], a['nombre'], a['mail'], 'Si' if a['activo'] else 'No']])
     except OSError as e:
         print(f"[x] Error al guardar: {e}")
     input("\nPresione enter para continuar...")
@@ -174,12 +162,8 @@ def listar_estudiantes_inactivos(estudiantes):
     limpiar_pantalla()
     print("=== ESTUDIANTES INACTIVOS ===")
     print()
-    for alumno in inactivos:
-        print(f"  Legajo : {alumno['legajo']}")
-        print(f"  Nombre : {alumno['nombre']}")
-        print(f"  Mail   : {alumno['mail']}")
-        print(SEP)
-
+    filas = [[a['legajo'], a['nombre'], a['mail']] for a in inactivos]
+    imprimir_tabla(['Legajo', 'Nombre', 'Mail'], filas)
     input("\nPresione enter para continuar...")
 
 

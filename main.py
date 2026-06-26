@@ -57,8 +57,6 @@ def login_menu():
             print(" [x] Email o contraseña incorrectos")
             input("Presione enter para continuar...")
         elif opcion == '2':
-            # Alta de usuario nuevo. Los usuarios creados acá siempre quedan
-            # con rol 'viewer' (no se puede crear un admin desde este menú).
             email = input('Email: ')
             while not validar_no_vacio(email):
                 print(" [x] Email no puede estar vacío")
@@ -85,10 +83,24 @@ def login_menu():
                 print(" [x] Contraseñas no coinciden")
                 input("Presione enter para continuar...")
                 continue
-            users.append({'email': email, 'password': password, 'rol': 'viewer'})
+            print()
+            print("Rol del usuario:")
+            print("1 - Admin")
+            print("2 - Viewer")
+            opcion_rol = input("Opción: ")
+            if opcion_rol == '1':
+                rol_nuevo = 'admin'
+            elif opcion_rol == '2':
+                rol_nuevo = 'viewer'
+            else:
+                print(" [x] Opción inválida")
+                input("Presione enter para continuar...")
+                continue
+
+            users.append({'email': email, 'password': password, 'rol': rol_nuevo})
             try:
                 guardar_usuarios(users)
-                print(" [✓] Usuario creado exitosamente")
+                print(f" [✓] Usuario creado exitosamente (rol: {rol_nuevo})")
             except OSError as e:
                 users.pop()
                 print(f" [x] Error al guardar el usuario: {e}")

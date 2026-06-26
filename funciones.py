@@ -44,6 +44,26 @@ def validar_numero(prompt):
             print("[x] Debe ingresar un número válido")
 
 
+def imprimir_tabla(headers, filas):
+    """Imprime una tabla ASCII con encabezados y filas de datos."""
+    anchos = [len(h) for h in headers]
+    for fila in filas:
+        for i, celda in enumerate(fila):
+            anchos[i] = max(anchos[i], len(str(celda)))
+
+    sep = "+" + "+".join("-" * (a + 2) for a in anchos) + "+"
+
+    def _fila_str(valores):
+        return "|" + "|".join(f" {str(v).ljust(anchos[i])} " for i, v in enumerate(valores)) + "|"
+
+    print(sep)
+    print(_fila_str(headers))
+    print(sep)
+    for fila in filas:
+        print(_fila_str(fila))
+    print(sep)
+
+
 def validar_nota(prompt):
     """Valida que la nota sea un número entre 0 y 10, puede tener decimales"""
     while True:

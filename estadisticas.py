@@ -1,4 +1,4 @@
-from funciones import limpiar_pantalla, validar_numero
+from funciones import limpiar_pantalla, validar_numero, imprimir_tabla
 from functools import reduce
 from matrices import cargar_estudiantes, cargar_materias, cargar_notas
 
@@ -38,24 +38,32 @@ def estadisticas_generales(estudiantes, materias, notas):
     # resumen[0] = total estudiantes, [1] = activos, [2] = materias activas, [3] = total notas
     resumen = (len(estudiantes), len(estudiantes_activos), len(materias_activas), len(notas))
 
-    print(f"  Estudiantes totales  : {resumen[0]}  (activos: {resumen[1]})")
-    print(f"  Materias activas     : {resumen[2]}")
-    print(f"  Notas registradas    : {resumen[3]}")
+    filas_resumen = [
+        ["Estudiantes totales",  resumen[0]],
+        ["Estudiantes activos",  resumen[1]],
+        ["Materias activas",     resumen[2]],
+        ["Notas registradas",    resumen[3]],
+    ]
 
     if resumen[0] > 0:
         pct_activos = resumen[1] / resumen[0] * 100
-        print(f"  Alumnos activos      : {pct_activos:.1f}% del total")
+        filas_resumen.append(["Alumnos activos (%)", f"{pct_activos:.1f}%"])
 
     if resumen[3] > 0:
         calificaciones   = list(map(lambda n: n["nota"], notas))
         promedio_general = calcular_promedio_recursivo(calificaciones)
-        print(f"\n  Promedio general     : {promedio_general:.2f}")
+        filas_resumen.append(["Promedio general", f"{promedio_general:.2f}"])
 
-        print("\n  Distribucion por tipo de evaluacion:")
+    imprimir_tabla(["Concepto", "Valor"], filas_resumen)
+
+    if resumen[3] > 0:
+        print("\nDistribucion por tipo de evaluacion:")
+        filas_tipos = []
         for tipo in ["Primer parcial", "Segundo parcial", "Final"]:
             cantidad = len(list(filter(lambda n: n["descripcion"] == tipo, notas)))
             pct_tipo = cantidad / resumen[3] * 100
-            print(f"    {tipo:<18}: {cantidad} ({pct_tipo:.1f}%)")
+            filas_tipos.append([tipo, cantidad, f"{pct_tipo:.1f}%"])
+        imprimir_tabla(["Tipo", "Cantidad", "%"], filas_tipos)
 
     # Conjuntos: cruzar alumnos activos con los que tienen al menos una nota
     legajos_activos   = {e['legajo'] for e in estudiantes if e['activo']}
@@ -63,8 +71,11 @@ def estadisticas_generales(estudiantes, materias, notas):
     activos_con_notas = legajos_activos & legajos_con_notas  # intersección
     activos_sin_notas = legajos_activos - legajos_con_notas  # diferencia
 
-    print(f"\n  Con notas cargadas   : {len(activos_con_notas)} alumnos")
-    print(f"  Sin notas todavía    : {len(activos_sin_notas)} alumnos")
+    print("\nCobertura de notas (alumnos activos):")
+    imprimir_tabla(["Estado", "Cantidad"], [
+        ["Con notas cargadas", len(activos_con_notas)],
+        ["Sin notas todavia",  len(activos_sin_notas)],
+    ])
 
     input("\nPresione enter para continuar...")
 
@@ -80,16 +91,13 @@ def promedio_general_estudiantes(estudiantes, notas):
     if len(notas) == 0:
         print("[x] No hay notas registradas")
     else:
+        filas = []
         for estudiante in estudiantes:
             if estudiante["activo"]:
-                notas_filtradas = [n for n in notas if n["id_estudiante"] == estudiante["legajo"]]
-                notas_alumno = list(map(lambda n: n["nota"], notas_filtradas))
-                if notas_alumno:
-                    # Promedio calculado de forma recursiva
-                    promedio = calcular_promedio_recursivo(notas_alumno)
-                    print(f"{estudiante['nombre']} (Legajo {estudiante['legajo']}): {promedio:.2f}")
-                else:
-                    print(f"{estudiante['nombre']} (Legajo {estudiante['legajo']}): Sin notas")
+                notas_alumno = list(map(lambda n: n["nota"], [n for n in notas if n["id_estudiante"] == estudiante["legajo"]]))
+                promedio = f"{calcular_promedio_recursivo(notas_alumno):.2f}" if notas_alumno else "Sin notas"
+                filas.append([estudiante['legajo'], estudiante['nombre'], promedio])
+        imprimir_tabla(["Legajo", "Nombre", "Promedio"], filas)
 
     input("Presione enter para continuar...")
 
@@ -99,6 +107,8 @@ def promedio_general_estudiantes(estudiantes, notas):
 def promedio_estudiante_materias(estudiantes, materias, notas):
     """Pide un legajo y muestra el promedio del estudiante en cada materia."""
     limpiar_pantalla()
+    imprimir_tabla(["Legajo", "Nombre"], [[e["legajo"], e["nombre"]] for e in estudiantes if e["activo"]])
+    print()
     legajo = validar_numero("Ingrese el legajo del estudiante: ")
 
     estudiante = None
@@ -121,17 +131,17 @@ def promedio_estudiante_materias(estudiantes, materias, notas):
     if not notas_alumno:
         print("[x] No hay notas para este estudiante")
     else:
+        filas = []
         for materia in materias:
             if materia["activo"]:
-                notas_filtradas = [n for n in notas_alumno if n["id_materia"] == materia["id"]]
-                notas_materia = list(map(lambda n: n["nota"], notas_filtradas))
+                notas_materia = list(map(lambda n: n["nota"], [n for n in notas_alumno if n["id_materia"] == materia["id"]]))
                 if notas_materia:
-                    promedio = sum(notas_materia) / len(notas_materia)
-                    print(f"{materia['nombre']}: {promedio:.2f}")
+                    filas.append([materia["nombre"], f"{sum(notas_materia) / len(notas_materia):.2f}"])
 
         calificaciones_total = list(map(lambda n: n["nota"], notas_alumno))
         promedio_total = calcular_promedio_recursivo(calificaciones_total)
-        print(f"\nPromedio total: {promedio_total:.2f}")
+        filas.append(["TOTAL", f"{promedio_total:.2f}"])
+        imprimir_tabla(["Materia", "Promedio"], filas)
 
     input("Presione enter para continuar...")
 
@@ -141,13 +151,7 @@ def promedio_estudiante_materias(estudiantes, materias, notas):
 def promedio_materia(materias, notas):
     """Pide un ID de materia y muestra el promedio general de sus notas."""
     limpiar_pantalla()
-    print("[✓] Materias disponibles:")
-    print()
-
-    for m in materias:
-        if m["activo"]:
-            print(f"{m['id']} - {m['nombre']}")
-
+    imprimir_tabla(["ID", "Nombre"], [[m["id"], m["nombre"]] for m in materias if m["activo"]])
     print()
     materia_id = validar_numero("Ingrese el ID de la materia: ")
 
@@ -169,13 +173,15 @@ def promedio_materia(materias, notas):
     print()
 
     if not notas_materia:
-        print(f" [x] No hay notas para {materia['nombre']}")
+        print(f"[x] No hay notas para {materia['nombre']}")
     else:
         calificaciones = list(map(lambda n: n["nota"], notas_materia))
         total_notas = reduce(lambda acc, nota: acc + nota, calificaciones, 0)
         promedio = total_notas / len(calificaciones)
-        print(f"Promedio general: {promedio:.2f}")
-        print(f"Total notas: {len(notas_materia)}")
+        imprimir_tabla(["Concepto", "Valor"], [
+            ["Total notas",      len(notas_materia)],
+            ["Promedio general", f"{promedio:.2f}"],
+        ])
 
     input("Presione enter para continuar...")
 
@@ -183,7 +189,7 @@ def promedio_materia(materias, notas):
 #------- PROMEDIO GENERAL DE MATERIAS -------
 
 def promedio_general_materias(materias, notas):
-    """Muestra la materia con mejor y peor promedio general."""
+    """Muestra el promedio de cada materia y destaca la mejor y peor."""
     limpiar_pantalla()
     print("=== PROMEDIO GENERAL DE MATERIAS ===")
     print()
@@ -210,10 +216,13 @@ def promedio_general_materias(materias, notas):
     mejor_id = max(promedios, key=lambda x: promedios[x][1])
     peor_id  = min(promedios, key=lambda x: promedios[x][1])
 
-    print(f"Materia con mejor promedio: {promedios[mejor_id][0]} ({promedios[mejor_id][1]:.2f})")
-    print(f"Materia con peor promedio:  {promedios[peor_id][0]} ({promedios[peor_id][1]:.2f})")
+    filas = [[nombre, f"{prom:.2f}"] for nombre, prom in promedios.values()]
+    imprimir_tabla(["Materia", "Promedio"], filas)
 
-    input("\nPresione enter para continuar")
+    print(f"\nMejor promedio : {promedios[mejor_id][0]} ({promedios[mejor_id][1]:.2f})")
+    print(f"Peor promedio  : {promedios[peor_id][0]} ({promedios[peor_id][1]:.2f})")
+
+    input("\nPresione enter para continuar...")
 
 
 #------- MEJOR ESTUDIANTE -------
@@ -234,14 +243,11 @@ def mejor_estudiante(estudiantes, notas):
             promedios[n["id_estudiante"]].append(n["nota"])
 
         mejor_legajo = max(promedios, key=lambda x: reduce(lambda acc, nota: acc + nota, promedios[x], 0) / len(promedios[x]))
-        suma_notas   = reduce(lambda acc, nota: acc + nota, promedios[mejor_legajo], 0)
+        suma_notas     = reduce(lambda acc, nota: acc + nota, promedios[mejor_legajo], 0)
         mejor_promedio = suma_notas / len(promedios[mejor_legajo])
 
-        for e in estudiantes:
-            if e["legajo"] == mejor_legajo:
-                print(f"Nombre: {e['nombre']}")
-                print(f"Legajo: {e['legajo']}")
-                print(f"Promedio: {mejor_promedio:.2f}")
+        nombre = next((e["nombre"] for e in estudiantes if e["legajo"] == mejor_legajo), str(mejor_legajo))
+        imprimir_tabla(["Legajo", "Nombre", "Promedio"], [[mejor_legajo, nombre, f"{mejor_promedio:.2f}"]])
 
     input("Presione enter para continuar...")
 
@@ -266,11 +272,8 @@ def peor_estudiante(estudiantes, notas):
         peor_legajo   = min(promedios, key=lambda x: sum(promedios[x]) / len(promedios[x]))
         peor_promedio = sum(promedios[peor_legajo]) / len(promedios[peor_legajo])
 
-        for e in estudiantes:
-            if e["legajo"] == peor_legajo:
-                print(f"Nombre: {e['nombre']}")
-                print(f"Legajo: {e['legajo']}")
-                print(f"Promedio: {peor_promedio:.2f}")
+        nombre = next((e["nombre"] for e in estudiantes if e["legajo"] == peor_legajo), str(peor_legajo))
+        imprimir_tabla(["Legajo", "Nombre", "Promedio"], [[peor_legajo, nombre, f"{peor_promedio:.2f}"]])
 
     input("Presione enter para continuar...")
 
